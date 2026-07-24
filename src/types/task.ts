@@ -8,3 +8,8 @@ export interface InterviewTask {
   difficulty: "easy" | "medium" | "hard";
   techStack: string;
 }
+
+export type EditInterviewTaskPayload = {
+  id: string;
+  updates: Partial<Omit<InterviewTask, "id">>;
+};
