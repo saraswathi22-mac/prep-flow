@@ -35,13 +35,12 @@ import { difficultyOrder } from "../../constants/difficultyOrder";
 import { Link } from "react-router-dom";
 import Button from "../../components/Button";
 import { RootState } from "../../store/store";
+import { InterviewTask } from "../../types/task";
 
 const InterviewTaskList = () => {
   // Redux
   const dispatch = useDispatch();
-  const allTasks = useSelector(
-  (state: RootState) => state.interviewTasks
-);
+  const allTasks = useSelector((state: RootState) => state.interviewTasks);
 
   // Auth
   const user = auth.currentUser;
@@ -126,10 +125,10 @@ const InterviewTaskList = () => {
 
   const firstName = userName.split(" ")[0];
 
-  const handleDelete = (task) => {
+  const handleDelete = (task: InterviewTask) => {
     try {
       // delete from redux
-      dispatch(deleteInterviewTask({ id: task.id }));
+      dispatch(deleteInterviewTask(task.id));
 
       // delete from firebase after a delay of 5 seconds to allow for undo
       const timer = setTimeout(async () => {
@@ -184,7 +183,8 @@ const InterviewTaskList = () => {
     });
 
     toast.success(
-      `🔄 ${unfinishedYesterdayTasks.length} task${unfinishedYesterdayTasks.length > 1 ? "s" : ""
+      `🔄 ${unfinishedYesterdayTasks.length} task${
+        unfinishedYesterdayTasks.length > 1 ? "s" : ""
       } rolled over to today`,
     );
   };
@@ -263,7 +263,7 @@ const InterviewTaskList = () => {
       {/* ✅ Kanban Board */}
       <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          {["todo", "inProgress", "done"].map((status) => {
+          {(["todo", "inProgress", "done"] as const).map((status) => {
             const columnTasks = boardTasks[status];
 
             return (
@@ -287,12 +287,13 @@ const InterviewTaskList = () => {
           rounded-full
           font-medium
 
-          ${status === "todo"
-                          ? "bg-gray-200 text-gray-700"
-                          : status === "inProgress"
-                            ? "bg-yellow-200 text-yellow-800"
-                            : "bg-green-200 text-green-800"
-                        }
+          ${
+            status === "todo"
+              ? "bg-gray-200 text-gray-700"
+              : status === "inProgress"
+                ? "bg-yellow-200 text-yellow-800"
+                : "bg-green-200 text-green-800"
+          }
         `}
                     >
                       {columnTasks.length}
@@ -315,8 +316,9 @@ const InterviewTaskList = () => {
                   
                   shadow-[0_10px_35px_rgba(0,0,0,0.08)]
                   
-                  ${status === "todo"
-                    ? `
+                  ${
+                    status === "todo"
+                      ? `
                         bg-gradient-to-br
                         from-slate-100
                         via-slate-50
@@ -324,8 +326,8 @@ const InterviewTaskList = () => {
                   
                         hover:shadow-slate-300/30
                       `
-                    : status === "inProgress"
-                      ? `
+                      : status === "inProgress"
+                        ? `
                         bg-gradient-to-br
                         from-yellow-50
                         via-orange-50
@@ -333,7 +335,7 @@ const InterviewTaskList = () => {
                   
                         hover:shadow-yellow-300/30
                       `
-                      : `
+                        : `
                         bg-gradient-to-br
                         from-emerald-50
                         via-green-50
@@ -434,7 +436,6 @@ const InterviewTaskList = () => {
                                 >
                                   +
                                 </motion.span>
-
                                 Add Task
                               </Button>
                             </Link>
@@ -470,7 +471,7 @@ const InterviewTaskList = () => {
 
         {showWeeklySummary && (
           <div className="mt-5 rounded-3xl border border-gray-100 bg-white p-6 md:p-7 shadow-sm">
-            <WeeklySummary tasks={weeklyTasks} weekId={currentWeekId} />
+            <WeeklySummary tasks={weeklyTasks} />
           </div>
         )}
       </div>

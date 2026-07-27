@@ -7,6 +7,10 @@ export interface InterviewTask {
   date: string;
   difficulty: "easy" | "medium" | "hard";
   techStack: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+  isRolledOver?: boolean;
 }
 
 export type EditInterviewTaskPayload = {
