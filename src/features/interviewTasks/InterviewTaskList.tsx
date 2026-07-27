@@ -34,11 +34,14 @@ import TaskFilters from "./TaskFilters";
 import { difficultyOrder } from "../../constants/difficultyOrder";
 import { Link } from "react-router-dom";
 import Button from "../../components/Button";
+import { RootState } from "../../store/store";
 
 const InterviewTaskList = () => {
   // Redux
   const dispatch = useDispatch();
-  const allTasks = useSelector((state) => state.interviewTasks);
+  const allTasks = useSelector(
+  (state: RootState) => state.interviewTasks
+);
 
   // Auth
   const user = auth.currentUser;
