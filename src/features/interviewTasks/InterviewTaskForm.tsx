@@ -17,6 +17,14 @@ export interface InterviewTaskFormValues {
   difficulty: Difficulty;
 }
 
+interface InterviewTaskFormProps {
+  title: string;
+  subtitle: string;
+  initialValues: InterviewTaskFormValues;
+  submitLabel: string;
+  onSubmit: (values: InterviewTaskFormValues) => void;
+  isEditMode?: boolean;
+}
 
 const InterviewTaskForm = ({
   title,
@@ -25,7 +33,7 @@ const InterviewTaskForm = ({
   submitLabel,
   onSubmit,
   isEditMode = false,
-}) => {
+}: InterviewTaskFormProps) => {
   const navigate = useNavigate();
 
   const [values, setValues] = useState(initialValues);
@@ -48,13 +56,9 @@ const InterviewTaskForm = ({
       <div className="w-full max-w-xl">
         <div className="bg-white border rounded-xl p-6 space-y-6 shadow-sm hover:shadow-md transition">
           <div>
-            <h2 className="text-xl font-semibold text-gray-800">
-              {title}
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
 
-            <p className="text-sm text-gray-500 mt-1">
-              {subtitle}
-            </p>
+            <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
           </div>
 
           <TextField
@@ -94,10 +98,7 @@ const InterviewTaskForm = ({
                 className="rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white text-gray-800 transition outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
               >
                 {TECH_STACK_OPTIONS.map((option) => (
-                  <option
-                    key={option}
-                    value={option}
-                  >
+                  <option key={option} value={option}>
                     {option}
                   </option>
                 ))}
@@ -114,16 +115,13 @@ const InterviewTaskForm = ({
                 onChange={(e) =>
                   setValues({
                     ...values,
-                    difficulty: e.target.value,
+                    difficulty: e.target.value as Difficulty,
                   })
                 }
                 className="rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white text-gray-800 capitalize transition outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
               >
                 {DIFFICULTY_OPTIONS.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
+                  <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
                 ))}
@@ -141,10 +139,7 @@ const InterviewTaskForm = ({
 
             <Button
               onClick={handleSubmit}
-              disabled={
-                questionLength < 5 ||
-                (isEditMode && !isChanged)
-              }
+              disabled={questionLength < 5 || (isEditMode && !isChanged)}
             >
               {submitLabel}
             </Button>
