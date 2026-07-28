@@ -9,6 +9,15 @@ import {
   DIFFICULTY_OPTIONS,
 } from "../../constants/interviewTaskOptions";
 
+import type { Difficulty } from "../../constants/interviewTaskOptions";
+
+export interface InterviewTaskFormValues {
+  question: string;
+  techStack: string;
+  difficulty: Difficulty;
+}
+
+
 const InterviewTaskForm = ({
   title,
   subtitle,

@@ -20,3 +20,6 @@ export const DIFFICULTY_OPTIONS = [
     label: "Hard 🔴",
   },
 ] as const;
+
+export type Difficulty =
+  (typeof DIFFICULTY_OPTIONS)[number]["value"];

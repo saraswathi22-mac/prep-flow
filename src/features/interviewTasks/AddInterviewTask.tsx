@@ -2,7 +2,9 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { addInterviewTask } from "./interviewTaskSlice";
-import InterviewTaskForm from "./InterviewTaskForm";
+import InterviewTaskForm, {
+  type InterviewTaskFormValues,
+} from "./InterviewTaskForm";
 import { getLocalDate, getWeekId } from "../../helpers/dateHelpers";
 import { auth } from "../../firebase/config";
 import { toast } from "sonner";
@@ -15,7 +17,7 @@ const AddInterviewTask = () => {
 
   const user = auth.currentUser;
 
-  const handleAddTask = (values) => {
+  const handleAddTask = (values: InterviewTaskFormValues) => {
     if (!user) {
       toast.error("Please login first");
       return;
@@ -34,7 +36,7 @@ const AddInterviewTask = () => {
         userId: user.uid,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      })
+      }),
     );
 
     toast.success("Interview task added");

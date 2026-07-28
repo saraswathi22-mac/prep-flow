@@ -1,16 +1,18 @@
 export type TaskStatus = "todo" | "inProgress" | "done" | "skipped";
+import type { Difficulty } from "../constants/interviewTaskOptions";
 
 export interface InterviewTask {
   id: string;
-  title: string;
+  question: string;
   status: TaskStatus;
   date: string;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: Difficulty;
   techStack: string;
   userId: string;
   createdAt: string;
   updatedAt: string;
   isRolledOver?: boolean;
+  weekId: string;
 }
 
 export type EditInterviewTaskPayload = {
