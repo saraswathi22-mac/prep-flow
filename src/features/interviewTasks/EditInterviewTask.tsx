@@ -4,7 +4,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { editInterviewTask } from "./interviewTaskSlice";
 import { auth } from "../../firebase/config";
 import { toast } from "sonner";
-import InterviewTaskForm from "./InterviewTaskForm";
+import InterviewTaskForm, {
+  type InterviewTaskFormValues,
+} from "./InterviewTaskForm";
+import type { RootState } from "../../store/store";
 
 const EditInterviewTask = () => {
   const { id } = useParams();
@@ -14,7 +17,7 @@ const EditInterviewTask = () => {
 
   const user = auth.currentUser;
 
-  const allTasks = useSelector((state) => state.interviewTasks);
+  const allTasks = useSelector((state: RootState) => state.interviewTasks);
 
   const interviewTasks = useMemo(() => {
     if (!user) return [];
@@ -24,19 +27,19 @@ const EditInterviewTask = () => {
 
   const existingTask = interviewTasks.find((t) => t.id === id);
 
-  const handleEditTask = (values) => {
+  const handleEditTask = (values: InterviewTaskFormValues) => {
     if (!existingTask) return;
 
     dispatch(
       editInterviewTask({
-        id,
+        id: existingTask.id,
         updates: {
           question: values.question,
           techStack: values.techStack,
           difficulty: values.difficulty,
           updatedAt: new Date().toISOString(),
         },
-      })
+      }),
     );
 
     toast.success("Interview task updated");
