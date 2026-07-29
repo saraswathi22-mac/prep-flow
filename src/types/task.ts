@@ -19,3 +19,5 @@ export type EditInterviewTaskPayload = {
   id: string;
   updates: Partial<Omit<InterviewTask, "id">>;
 };
+
+export type TaskFilter = "all" | "completed" | "pending";
