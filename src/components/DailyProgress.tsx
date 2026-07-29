@@ -9,7 +9,12 @@ import {
   TrendingUpRounded,
 } from "@mui/icons-material";
 
-const DailyProgress = ({ completed = 0, total = 0 }) => {
+interface DailyProgressProps {
+  completed?: number;
+  total?: number;
+}
+
+const DailyProgress = ({ completed = 0, total = 0 }: DailyProgressProps) => {
   const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
 
   const getProgressColor = () => {

@@ -8,7 +8,16 @@ import {
   YAxis,
 } from "recharts";
 
-function DailyActivityChart({ data }) {
+interface DailyActivityData {
+  day: string;
+  tasks: number;
+}
+
+interface DailyActivityChartProps {
+  data: DailyActivityData[];
+}
+
+function DailyActivityChart({ data }: DailyActivityChartProps) {
   return (
     <div className="rounded-2xl border border-gray-100 p-5">
       <h4 className="mb-4 text-sm font-semibold text-gray-800">

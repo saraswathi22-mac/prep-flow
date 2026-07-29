@@ -1,7 +1,13 @@
 import { motion } from "framer-motion";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
-const DatePicker = ({ selectedDate, max, onChange }) => {
+interface DatePickerProps {
+  selectedDate: string;
+  max: string;
+  onChange: (date: string) => void;
+} 
+
+const DatePicker = ({ selectedDate, max, onChange }: DatePickerProps) => {
   return (
     <motion.div
       initial={{

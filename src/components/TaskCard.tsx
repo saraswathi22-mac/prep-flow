@@ -5,12 +5,21 @@ import { motion } from "framer-motion";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+import type { InterviewTask, TaskStatus } from "../types/task";
+
+interface TaskCardProps {
+  task: InterviewTask;
+  isPastDay: boolean;
+  onStatusChange: (id: string, status: TaskStatus) => void;
+  onDelete: (task: InterviewTask) => void;
+}
+
 const TaskCard = ({
   task,
   isPastDay,
   onStatusChange,
   onDelete,
-}) => {
+}: TaskCardProps) => {
   const { techStack, status } = task;
 
   const difficulty = task.difficulty || "medium";
@@ -34,10 +43,9 @@ const TaskCard = ({
   };
 
   const difficultyColor = {
-    high: "bg-red-100 text-red-700",
-    medium:
-      "bg-yellow-100 text-yellow-700",
-    low: "bg-green-100 text-green-700",
+    hard: "bg-red-100 text-red-700",
+    medium: "bg-yellow-100 text-yellow-700",
+    easy: "bg-green-100 text-green-700",
   };
 
   const statusColor = {
@@ -51,30 +59,24 @@ const TaskCard = ({
     <motion.div
       ref={setNodeRef}
       style={style}
-
       layout
-
       whileHover={{
         y: -4,
         scale: 1.01,
       }}
-
       whileTap={{
         scale: 0.98,
       }}
-
       animate={{
         scale: isDragging ? 1.04 : 1,
         rotate: isDragging ? 1.5 : 0,
         opacity: isDragging ? 0.85 : 1,
       }}
-
       transition={{
         type: "spring",
         stiffness: 260,
         damping: 20,
       }}
-
       className={`
         group
         rounded-2xl
@@ -173,12 +175,7 @@ const TaskCard = ({
 
             shadow-sm
 
-            ${
-              difficultyColor[
-                difficulty
-              ] ||
-              "bg-gray-100 text-gray-600"
-            }
+            ${difficultyColor[difficulty] || "bg-gray-100 text-gray-600"}
           `}
         >
           {difficulty}
@@ -219,16 +216,10 @@ const TaskCard = ({
       {/* 🔷 Extra Info */}
       <div className="text-xs space-y-1">
         {task.isRolledOver && (
-          <p className="text-orange-500">
-            ⏭ Rolled from yesterday
-          </p>
+          <p className="text-orange-500">⏭ Rolled from yesterday</p>
         )}
 
-        {isPastDay && (
-          <p className="text-gray-400">
-            🔒 Read-only
-          </p>
-        )}
+        {isPastDay && <p className="text-gray-400">🔒 Read-only</p>}
       </div>
 
       {/* 🔷 Actions */}
@@ -252,10 +243,7 @@ const TaskCard = ({
                 onClick={(e) => {
                   e.stopPropagation();
 
-                  onStatusChange(
-                    task.id,
-                    "inProgress"
-                  );
+                  onStatusChange(task.id, "inProgress");
                 }}
                 className="
                   text-xs
@@ -277,16 +265,12 @@ const TaskCard = ({
               </button>
             )}
 
-            {status ===
-              "inProgress" && (
+            {status === "inProgress" && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
 
-                  onStatusChange(
-                    task.id,
-                    "done"
-                  );
+                  onStatusChange(task.id, "done");
                 }}
                 className="
                   text-xs
@@ -331,9 +315,7 @@ const TaskCard = ({
             </Link>
 
             <button
-              onClick={() =>
-                onDelete(task)
-              }
+              onClick={() => onDelete(task)}
               className="
                 text-xs
 
