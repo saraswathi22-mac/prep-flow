@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { login, signup } from "../firebase/auth";
+import { FirebaseError } from "firebase/app";
+import type { KeyboardEvent } from "react";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -9,7 +11,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const getErrorMessage = (err) => {
+  const getErrorMessage = (err: FirebaseError) => {
     const code = err.code || "";
 
     switch (code) {
@@ -36,7 +38,7 @@ function Login() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (loading) return;
 
     setError("");
@@ -48,21 +50,25 @@ function Login() {
       } else {
         await signup(email, password);
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(getErrorMessage(err));
+      if (err instanceof FirebaseError) {
+        setError(getErrorMessage(err));
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSubmit();
     }
   };
 
-  const toggleMode = () => {
+  const toggleMode = (): void => {
     setError("");
     setEmail("");
     setPassword("");
@@ -70,9 +76,9 @@ function Login() {
     setIsLogin((prev) => !prev);
   };
 
-  const BRAND_GREEN = "#5A9C43";
-  const BRAND_GREEN_HOVER = "#4C8A38";
-  const BRAND_YELLOW = "#F7B81B";
+  const BRAND_GREEN = "#5A9C43" as const;
+  const BRAND_GREEN_HOVER = "#4C8A38" as const;
+  const BRAND_YELLOW = "#F7B81B" as const;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center px-4">
@@ -159,8 +165,8 @@ function Login() {
             {loading
               ? "Please wait..."
               : isLogin
-              ? "Sign In"
-              : "Create Account"}
+                ? "Sign In"
+                : "Create Account"}
           </button>
         </div>
 
