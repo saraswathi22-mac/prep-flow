@@ -7,7 +7,16 @@ import {
   Label,
 } from "recharts";
 
-const TECH_COLORS = {
+interface TechStackCoverageProps {
+  techStackStats: Record<string, number>;
+}
+
+interface TechStackData {
+  name: string;
+  value: number;
+}
+
+const TECH_COLORS: Record<string, string> = {
   React: "#3B82F6",
   JavaScript: "#F59E0B",
   TypeScript: "#3178C6",
@@ -17,8 +26,8 @@ const TECH_COLORS = {
   Nextjs: "#111827",
 };
 
-function TechStackCoverage({ techStackStats }) {
-  const techStack = Object.entries(techStackStats).map(([name, value]) => ({
+function TechStackCoverage({ techStackStats }: TechStackCoverageProps) {
+  const techStack: TechStackData[] = Object.entries(techStackStats).map(([name, value]) => ({
     name,
     value,
   }));
@@ -43,7 +52,7 @@ function TechStackCoverage({ techStackStats }) {
                   innerRadius={60}
                   outerRadius={90}
                   paddingAngle={3}
-                >
+                 >
                   {techStack.map((item) => (
                     <Cell
                       key={item.name}
@@ -52,6 +61,10 @@ function TechStackCoverage({ techStackStats }) {
                   ))}
                   <Label
                     content={({ viewBox }) => {
+                       if (!viewBox || !("cx" in viewBox) || !("cy" in viewBox)) {
+                        return null;
+                      }
+
                       const { cx, cy } = viewBox;
 
                       return (
@@ -82,7 +95,7 @@ function TechStackCoverage({ techStackStats }) {
 
                 <Tooltip
                   formatter={(value, name) => [
-                    `${value} task${value > 1 ? "s" : ""}`,
+                    `${value} task${Number(value) > 1 ? "s" : ""}`,
                     name,
                   ]}
                 />

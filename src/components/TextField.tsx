@@ -5,7 +5,7 @@ interface TextFieldProps {
   label?: string;
   value: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
-  inputProps?: HTMLMotionProps<"input">;
+  inputProps?: Omit<HTMLMotionProps<"input">, "value" | "onChange">;
   error?: string;
   helperText?: string;
   fullWidth?: boolean;
@@ -50,10 +50,11 @@ const TextField = ({
       {label && (
         <motion.label
           layout
+          htmlFor={inputProps.id}
           className="
             text-sm
-  font-medium
-  text-gray-700
+            font-medium
+            text-gray-700
           "
         >
           {label}
@@ -92,10 +93,11 @@ const TextField = ({
           </motion.span>
         )}
 
-        {/* Input */}
+        {/* 🔷 Input */}
         <motion.input
           value={value}
           onChange={onChange}
+          aria-invalid={!!error}
           {...inputProps}
           whileFocus={{
             scale: 1.01,

@@ -3,7 +3,17 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import Button from "./Button";
 
-const TopActions = ({ isToday, hasUnfinishedYesterday, onRollover }) => {
+interface TopActionsProps {
+  isToday: boolean;
+  hasUnfinishedYesterday: boolean;
+  onRollover: () => void;
+}
+
+const TopActions = ({
+  isToday,
+  hasUnfinishedYesterday,
+  onRollover,
+}: TopActionsProps) => {
   return (
     <motion.div
       layout
