@@ -5,8 +5,21 @@ import {
 } from "../helpers/weeklyStats";
 import TechStackCoverage from "./TechStackCoverage";
 import DailyActivityChart from "./DailyActivityChart";
+import { InterviewTask } from "../types/task";
 
-const WeeklySummary = ({ tasks }) => {
+interface WeeklySummaryProps {
+  tasks: InterviewTask[];
+}
+
+type StatCardColor = "green" | "yellow" | "gray";
+
+interface StatCardProps {
+  label: string;
+  value: string | number;
+  color?: StatCardColor;
+}
+
+const WeeklySummary = ({ tasks }: WeeklySummaryProps) => {
   const stats = getWeeklyStats(tasks);
   const dailyActivity = getDailyActivity(tasks);
 
@@ -148,8 +161,8 @@ const WeeklySummary = ({ tasks }) => {
 
 /* ---------- Small UI Helpers ---------- */
 
-const StatCard = ({ label, value, color = "gray" }) => {
-  const colorMap = {
+const StatCard = ({ label, value, color = "gray" }: StatCardProps) => {
+  const colorMap: Record<StatCardColor, string> = {
     green: "text-green-600",
     yellow: "text-yellow-600",
     gray: "text-gray-700",
@@ -165,11 +178,5 @@ const StatCard = ({ label, value, color = "gray" }) => {
     </div>
   );
 };
-
-const EmptyText = ({ text }) => (
-  <div className="rounded-xl border border-dashed border-gray-200 p-5 text-center text-sm text-gray-400">
-    {text}
-  </div>
-);
 
 export default WeeklySummary;

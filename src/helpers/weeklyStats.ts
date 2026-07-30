@@ -15,25 +15,23 @@ export const getWeeklyStats = (tasks: InterviewTask[] = []) => {
   );
 };
 
-export const groupByKey = (
+export const groupByKey = <K extends keyof InterviewTask>(
   tasks: InterviewTask[] = [],
-  key: keyof InterviewTask,
-  formatter = (value: unknown) => String(value),
-) => {
-  return tasks.reduce(
-    (acc, task) => {
-      const value = task[key];
+  key: K,
+  formatter: (value: NonNullable<InterviewTask[K]>) => string = (value) =>
+    String(value),
+): Record<string, number> => {
+  return tasks.reduce<Record<string, number>>((acc, task) => {
+    const value = task[key];
 
-      if (!value) return acc;
+    if (value == null) return acc; // since loosely typed, also checks undefined
 
-      const formattedValue = formatter(value);
+    const formattedValue = formatter(value as NonNullable<InterviewTask[K]>);
 
-      acc[formattedValue] = (acc[formattedValue] || 0) + 1;
+    acc[formattedValue] = (acc[formattedValue] || 0) + 1;
 
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
+    return acc;
+  }, {});
 };
 
 export const getDailyActivity = (tasks: InterviewTask[] = []) => {
