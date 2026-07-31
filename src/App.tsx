@@ -27,36 +27,47 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import type { MouseEvent } from "react";
+
+import type { User } from "firebase/auth";
+import { AppDispatch, RootState } from "./store/store";
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const open = Boolean(anchorEl);
 
-  const handleMenuOpen = (event) => {
+  const handleMenuOpen = (event: MouseEvent<HTMLElement>): void => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = (): void => {
     setAnchorEl(null);
   };
 
-  const dispatch = useDispatch();
-  const tasks = useSelector((state) => state.interviewTasks);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const tasks = useSelector((state: RootState) => state.interviewTasks);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   // Observe Firebase auth state
   useEffect(() => {
-    const unsubscribe = observeAuthState(async (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = observeAuthState(
+      async (currentUser: User | null): Promise<void> => {
+        setUser(currentUser);
 
-      const savedTasks = await loadTasks(currentUser);
-      dispatch(setTasks(savedTasks));
+        const savedTasks = await loadTasks(currentUser);
+        dispatch(setTasks(savedTasks));
 
-      setLoading(false);
-    });
+        setLoading(false);
+      },
+    );
 
     return () => unsubscribe();
   }, [dispatch]);
@@ -72,7 +83,7 @@ function App() {
     saveData();
   }, [tasks, user, loading]);
 
-  const handleLogout = async () => {
+  const handleLogout = async (): Promise<void> => {
     try {
       await signOut(auth);
     } catch (error) {
@@ -154,13 +165,15 @@ shadow-sm
               <Menu
                 anchorEl={anchorEl}
                 open={open}
-                onClose={handleMenuClose}
-                PaperProps={{
-                  elevation: 3,
-                  sx: {
-                    mt: 1,
-                    minWidth: 220,
-                    borderRadius: 2,
+                onClose={handleClose}
+                slotProps={{
+                  paper: {
+                    elevation: 3,
+                    sx: {
+                      mt: 1,
+                      minWidth: 200,
+                      borderRadius: 2,
+                    },
                   },
                 }}
               >
