@@ -46,9 +46,9 @@ function Login() {
 
     try {
       if (isLogin) {
-        await login(email, password);
+        await login({ email, password });
       } else {
-        await signup(email, password);
+        await signup({ email, password });
       }
     } catch (err: unknown) {
       console.error(err);
