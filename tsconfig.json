@@ -8,8 +8,11 @@
 
     "jsx": "react-jsx",
 
-    "allowJs": true,
-    "checkJs": false,
+    "allowJs": false,
+    
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
 
     "strict": true,
 
