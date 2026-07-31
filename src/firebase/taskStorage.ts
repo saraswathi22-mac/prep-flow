@@ -43,6 +43,7 @@ export const saveTasks = async (
   user: User | null,
   tasks: InterviewTask[],
 ): Promise<void> => {
+  if (!user) return;
   try {
     const collectionName = getCollectionName(user);
 

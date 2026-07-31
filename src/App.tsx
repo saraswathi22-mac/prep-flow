@@ -21,11 +21,8 @@ import { Toaster } from "sonner";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import Divider from "@mui/material/Divider";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import type { MouseEvent } from "react";
 
@@ -62,8 +59,12 @@ function App() {
       async (currentUser: User | null): Promise<void> => {
         setUser(currentUser);
 
-        const savedTasks = await loadTasks(currentUser);
-        dispatch(setTasks(savedTasks));
+        if (currentUser) {
+          const savedTasks = await loadTasks(currentUser);
+          dispatch(setTasks(savedTasks));
+        } else {
+          dispatch(setTasks([]));
+        }
 
         setLoading(false);
       },
@@ -74,7 +75,7 @@ function App() {
 
   // Save tasks whenever tasks change
   useEffect(() => {
-    if (loading) return;
+    if (loading || !user) return;
 
     const saveData = async () => {
       await saveTasks(user, tasks);
