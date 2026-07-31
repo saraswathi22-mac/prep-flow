@@ -3,12 +3,18 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  type User,
 } from "firebase/auth";
 
 import { auth } from "./config";
 
+interface AuthCredentials  {
+  email: string;
+  password: string;
+}
+
 // Signup
-export const signup = async (email, password) => {
+export const signup = async ({email, password}: AuthCredentials ): Promise<User> => {
   const userCredential = await createUserWithEmailAndPassword(
     auth,
     email,
@@ -18,7 +24,7 @@ export const signup = async (email, password) => {
 };
 
 // Login
-export const login = async (email, password) => {
+export const login = async ({email, password}: AuthCredentials): Promise<User> => {
   const userCredential = await signInWithEmailAndPassword(
     auth,
     email,
@@ -28,11 +34,11 @@ export const login = async (email, password) => {
 };
 
 // Logout
-export const logout = async () => {
+export const logout = async (): Promise<void> => {
   await signOut(auth);
 };
 
 // Observe auth state
-export const observeAuthState = (callback) => {
+export const observeAuthState = (callback: (user: User | null) => void) => {
   return onAuthStateChanged(auth, callback);
 };
