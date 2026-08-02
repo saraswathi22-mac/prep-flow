@@ -54,7 +54,6 @@ Preparing for frontend interviews often meant juggling notes, spreadsheets, and 
 | 📊 **Analytics Dashboard** | Daily activity, weekly progress, tech stack coverage, difficulty distribution, weekly insights |
 | 🔐 **Authentication** | Firebase Anonymous & Google Sign-In |
 | ☁️ **Cloud Sync** | Real-time Cloud Firestore synchronization |
-| 🌙 **Theming** | Light/Dark mode |
 | 📱 **Responsive** | Fully responsive UI across devices |
 
 ---
