@@ -1,64 +1,128 @@
+<div align="center">
+
 # 🚀 PrepFlow
 
-A full-stack interview preparation planner that turns scattered prep notes into a structured, trackable routine — built with React, Redux Toolkit, and Firebase.
+**A full-stack interview preparation planner that turns scattered prep into a structured, trackable workflow.**
 
-## 🔗 Live Demo: [View Live App](https://prep-flow-app.netlify.app/)
+Built with React, TypeScript, Redux Toolkit, and Firebase.
 
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen?style=for-the-badge)](https://prep-flow-app.netlify.app/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
+
+[**Live Demo**](https://prep-flow-app.netlify.app/) · [Features](#-features) · [Tech Stack](#%EF%B8%8F-tech-stack) · [Getting Started](#-getting-started)
+
+</div>
+
+---
 
 ## 💡 Why I Built This
 
-During my own interview prep, I found it hard to track what I'd practiced, how consistently, and where the gaps were (e.g., too much DSA, not enough system design). PrepFlow is my answer to that — a self-hosted planner with real analytics, not just a to-do list.
+Preparing for frontend interviews often meant juggling notes, spreadsheets, and to-do lists with no clear picture of progress.
+
+**PrepFlow** solves that: a productivity-focused planner that helps developers organize daily practice, monitor consistency, visualize progress, and spot skill gaps through real-time analytics.
+
+---
 
 ## ✨ Features
 
-* ✅ Add, edit, and delete interview tasks
-* 📅 Organize tasks by date, with automatic rollover of unfinished items
-* 🔒 Past tasks locked as read-only for accurate historical tracking
-* 🎯 Task status tracking — Completed / Pending / Skipped
-* 📊 Interactive analytics dashboard
-  * Daily activity chart
-  * Weekly progress overview
-  * Tech stack distribution
-  * Weekly insights and completion statistics
-* 🔥 Firebase Authentication (secure sign-in)
-* ☁️ Cloud Firestore for real-time data sync
-* ⚡ Optimized performance with React memoization and derived state
-* 🎨 Clean, responsive, and reusable component architecture
+| Category | Details |
+|---|---|
+| ✅ **Task Management** | Create, edit, and delete interview tasks; organize by date |
+| 🔄 **Smart Rollover** | Unfinished tasks automatically move to the next day |
+| 🔒 **Historical Integrity** | Past days lock automatically for accurate tracking |
+| 🎯 **Status Tracking** | Completed, Pending, Skipped |
+| 🏷️ **Categorization** | Tag tasks by difficulty and tech stack |
+| ↕️ **Drag & Drop** | Reorder tasks intuitively |
+| 📊 **Analytics Dashboard** | Daily activity, weekly progress, tech stack coverage, difficulty distribution, weekly insights |
+| 🔐 **Authentication** | Firebase Anonymous & Google Sign-In |
+| ☁️ **Cloud Sync** | Real-time Cloud Firestore synchronization |
+| 🌙 **Theming** | Light/Dark mode |
+| 📱 **Responsive** | Fully responsive UI across devices |
+
+---
 
 ## 🛠️ Tech Stack
 
-* Frontend:	React, Redux Toolkit, React Router
-* Styling:	Tailwind CSS, Framer Motion
-* Backend / Auth:	Firebase Authentication, Cloud Firestore
-* Data Viz:	Recharts
+**Frontend**
+`React` · `TypeScript` · `Redux Toolkit` · `React Router`
+
+**Styling & Animation**
+`Tailwind CSS` · `Framer Motion`
+
+**Backend**
+`Firebase Authentication` · `Cloud Firestore`
+
+**Charts**
+`Recharts`
+
+**Drag & Drop**
+`dnd-kit`
+
+---
 
 ## 🧠 Key Concepts Implemented
 
-* Redux Toolkit state management
-* Firebase Authentication & Firestore integration
-* Memoization with `useMemo`
-* Derived analytics from application state
-* Reusable and composable React components
-* Controlled forms and validation
-* Responsive UI design
-* Dynamic charts and data visualization
+- TypeScript type safety across the app
+- Generic utility functions
+- Custom TypeScript interfaces & types
+- Redux Toolkit state management
+- Firebase Authentication flows
+- Firestore CRUD operations
+- React Hooks
+- Memoization with `useMemo`
+- Derived state & computed analytics
+- Component composition
+- Responsive UI architecture
 
-## 🚧 Notable Challenges Solved
+---
 
-* Rollover without data loss: unfinished tasks carry forward automatically while completed history stays untouched
-* Accurate historical analytics: past days are locked read-only so stats can't drift after the fact
-* Derived dashboards: analytics are computed from live task state rather than stored separately, so they're always in sync
+## 🚧 Technical Challenges Solved
+
+### Smart Task Rollover
+Unfinished tasks automatically move to the next day while preserving completed history.
+
+### Accurate Historical Analytics
+Past dates become read-only once they pass, so analytics always reflect what actually happened — never retroactively edited.
+
+### Derived Analytics
+Charts and statistics are computed directly from application state instead of stored redundantly, so everything stays in sync automatically.
+
+### TypeScript Migration
+Migrated the entire codebase from JavaScript to TypeScript — improving maintainability, developer experience, and compile-time safety across components, Redux slices, Firebase integration, and utility functions.
+
+---
 
 ## 🚀 Getting Started
 
 ```bash
-git clone https://github.com/saraswathi22-mac/prep-flow
+# Clone the repo
+git clone https://github.com/saraswathi22-mac/prep-flow.git
 cd prep-flow
+
+# Install dependencies
 npm install
+
+# Run locally
 npm run dev
 ```
 
+---
+
 ## 👤 Author
 
-M A Saraswathi — Frontend Engineer (React/TypeScript) 
-[LinkedIn](https://www.linkedin.com/in/m-a-saraswathi/) · [GitHub](https://github.com/saraswathi22-mac) · [Portfolio](https://saraswathi-portfolio.vercel.app/)
+**M A Saraswathi**
+Frontend Engineer specializing in React, TypeScript, and modern web applications.
+
+- 💼 LinkedIn — [m-a-saraswathi](https://www.linkedin.com/in/m-a-saraswathi/)
+- 💻 GitHub — [saraswathi22-mac](https://github.com/saraswathi22-mac)
+- 🌐 Portfolio — [saraswathi-portfolio.vercel.app](https://saraswathi-portfolio.vercel.app/)
+
+---
+
+<div align="center">
+
+If PrepFlow helped you think about structuring your own prep, consider ⭐ starring the repo!
+
+</div>
