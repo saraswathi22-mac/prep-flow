@@ -25,6 +25,18 @@ Preparing for frontend interviews often meant juggling notes, spreadsheets, and 
 
 ---
 
+## 📸 Preview
+
+<p align="center">
+  <img src="public/screenshots/interview-tasks.png" width="800" alt="PrepFlow task board with Todo, In Progress, and Done columns"/>
+</p>
+
+<p align="center">
+  <img src="public/screenshots/signin-login.png" width="450" alt="PrepFlow sign-in screen"/>
+</p>
+
+---
+
 ## ✨ Features
 
 | Category | Details |
