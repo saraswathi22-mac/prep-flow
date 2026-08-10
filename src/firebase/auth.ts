@@ -3,32 +3,46 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  updateProfile,
   type User,
 } from "firebase/auth";
 
 import { auth } from "./config";
 
-interface AuthCredentials  {
+interface AuthCredentials {
   email: string;
   password: string;
+  name?: string;
 }
 
 // Signup
-export const signup = async ({email, password}: AuthCredentials ): Promise<User> => {
+export const signup = async ({
+  name,
+  email,
+  password,
+}: AuthCredentials): Promise<User> => {
   const userCredential = await createUserWithEmailAndPassword(
     auth,
     email,
-    password
+    password,
   );
+
+  await updateProfile(userCredential.user, {
+    displayName: name,
+  });
+
   return userCredential.user;
 };
 
 // Login
-export const login = async ({email, password}: AuthCredentials): Promise<User> => {
+export const login = async ({
+  email,
+  password,
+}: AuthCredentials): Promise<User> => {
   const userCredential = await signInWithEmailAndPassword(
     auth,
     email,
-    password
+    password,
   );
   return userCredential.user;
 };

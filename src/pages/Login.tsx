@@ -2,8 +2,14 @@ import { useState } from "react";
 import { login, signup } from "../firebase/auth";
 import { FirebaseError } from "firebase/app";
 import type { KeyboardEvent } from "react";
+import { toast } from "sonner";
 
-function Login() {
+interface LoginProps {
+  onLoginStart: () => void;
+}
+
+function Login({ onLoginStart }: LoginProps) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -46,9 +52,15 @@ function Login() {
 
     try {
       if (isLogin) {
+        onLoginStart();
+
         await login({ email, password });
       } else {
-        await signup({ email, password });
+        const user = await signup({ name, email, password });
+
+        toast.success(`Welcome, ${user.displayName || name}!`, {
+          description: "Your account is ready.",
+        });
       }
     } catch (err: unknown) {
       console.error(err);
@@ -70,6 +82,7 @@ function Login() {
 
   const toggleMode = (): void => {
     setError("");
+    setName("");
     setEmail("");
     setPassword("");
     setShowPassword(false);
@@ -114,6 +127,17 @@ function Login() {
 
         {/* Form */}
         <div className="space-y-4">
+          {!isLogin && (
+            <input
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-700 outline-none transition-all focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+            />
+          )}
+
           <input
             type="email"
             placeholder="Email address"

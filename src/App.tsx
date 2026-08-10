@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -16,7 +16,7 @@ import EditInterviewTask from "./features/interviewTasks/EditInterviewTask";
 import InterviewTaskList from "./features/interviewTasks/InterviewTaskList";
 import Login from "./pages/Login";
 
-import { Toaster } from "sonner";
+import { Toaster, toast } from "sonner";
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -32,7 +32,7 @@ import { AppDispatch, RootState } from "./store/store";
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const isLoggingIn = useRef(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const open = Boolean(anchorEl);
@@ -62,6 +62,19 @@ function App() {
         if (currentUser) {
           const savedTasks = await loadTasks(currentUser);
           dispatch(setTasks(savedTasks));
+
+          if (isLoggingIn.current) {
+            toast.success(
+              currentUser.displayName
+                ? `Welcome back, ${currentUser.displayName}!`
+                : "Welcome back!",
+              {
+                description: "You're successfully signed in.",
+              },
+            );
+
+            isLoggingIn.current = false;
+          }
         } else {
           dispatch(setTasks([]));
         }
@@ -97,7 +110,7 @@ function App() {
   }
 
   if (!user) {
-    return <Login />;
+    return <Login onLoginStart={() => (isLoggingIn.current = true)} />;
   }
 
   const userName = (user.displayName || user.email?.split("@")[0] || "User")
@@ -108,34 +121,39 @@ function App() {
     <>
       <Toaster position="top-right" richColors closeButton />
 
-      <div className="min-h-screen bg-blue-50">
-        {/* Navbar */}
-        <header className="sticky top-0 z-50 h-16 bg-white border-b border-gray-200 shadow-sm">
-          <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-            {/* Logo */}
-            <div className="flex items-center gap-1">
-              <img
-                src="/prep-flow.png"
-                alt="PrepFlow"
-                className="h-11 w-10 object-contain"
-              />
+      {loading ? (
+        <div>Loading...</div>
+      ) : !user ? (
+        <Login onLoginStart={() => (isLoggingIn.current = true)} />
+      ) : (
+        <div className="min-h-screen bg-blue-50">
+          {/* Navbar */}
+          <header className="sticky top-0 z-50 h-16 bg-white border-b border-gray-200 shadow-sm">
+            <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+              {/* Logo */}
+              <div className="flex items-center gap-1">
+                <img
+                  src="/prep-flow.png"
+                  alt="PrepFlow"
+                  className="h-11 w-10 object-contain"
+                />
 
-              <h1 className="text-2xl font-bold tracking-tight text-gray-800">
-                PrepFlow
-              </h1>
-            </div>
+                <h1 className="text-2xl font-bold tracking-tight text-gray-800">
+                  PrepFlow
+                </h1>
+              </div>
 
-            {/* Right Section */}
-            <div className="flex items-center">
-              {/* Profile Button */}
-              <button
-                type="button"
-                onClick={handleMenuOpen}
-                className="flex items-center gap-2 rounded-lg px-2 py-1 transition hover:bg-gray-100"
-              >
-                {/* Avatar */}
-                <div
-                  className="
+              {/* Right Section */}
+              <div className="flex items-center">
+                {/* Profile Button */}
+                <button
+                  type="button"
+                  onClick={handleMenuOpen}
+                  className="flex items-center gap-2 rounded-lg px-2 py-1 transition hover:bg-gray-100"
+                >
+                  {/* Avatar */}
+                  <div
+                    className="
 flex h-10 w-10 items-center justify-center
 rounded-full
 bg-green-600
@@ -143,68 +161,69 @@ text-white
 font-semibold
 shadow-sm
 "
-                >
-                  {userName.charAt(0).toUpperCase()}
-                </div>
+                  >
+                    {userName.charAt(0).toUpperCase()}
+                  </div>
 
-                {/* User Name */}
-                <div className="hidden sm:block text-left">
-                  <p className="text-sm font-medium text-gray-800">
-                    {userName}
-                  </p>
-                </div>
+                  {/* User Name */}
+                  <div className="hidden sm:block text-left">
+                    <p className="text-sm font-medium text-gray-800">
+                      {userName}
+                    </p>
+                  </div>
 
-                <KeyboardArrowDownIcon
-                  fontSize="small"
-                  className={`transition-transform duration-200 ${
-                    open ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
+                  <KeyboardArrowDownIcon
+                    fontSize="small"
+                    className={`transition-transform duration-200 ${
+                      open ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
-              {/* Profile Menu */}
-              <Menu
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                slotProps={{
-                  paper: {
-                    elevation: 3,
-                    sx: {
-                      mt: 1,
-                      minWidth: 200,
-                      borderRadius: 2,
+                {/* Profile Menu */}
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  slotProps={{
+                    paper: {
+                      elevation: 3,
+                      sx: {
+                        mt: 1,
+                        minWidth: 200,
+                        borderRadius: 2,
+                      },
                     },
-                  },
-                }}
-              >
-                <MenuItem
-                  onClick={() => {
-                    handleMenuClose();
-                    handleLogout();
                   }}
                 >
-                  <ListItemIcon>
-                    <LogoutOutlinedIcon color="error" fontSize="small" />
-                  </ListItemIcon>
-                  Logout
-                </MenuItem>
-              </Menu>
+                  <MenuItem
+                    onClick={() => {
+                      handleMenuClose();
+                      handleLogout();
+                    }}
+                  >
+                    <ListItemIcon>
+                      <LogoutOutlinedIcon color="error" fontSize="small" />
+                    </ListItemIcon>
+                    Logout
+                  </MenuItem>
+                </Menu>
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
 
-        {/* Main Content */}
-        <main className="mx-auto max-w-5xl px-4 py-8">
-          <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
-            <Routes>
-              <Route path="/" element={<InterviewTaskList />} />
-              <Route path="/add-task" element={<AddInterviewTask />} />
-              <Route path="/edit-task/:id" element={<EditInterviewTask />} />
-            </Routes>
-          </div>
-        </main>
-      </div>
+          {/* Main Content */}
+          <main className="mx-auto max-w-5xl px-4 py-8">
+            <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
+              <Routes>
+                <Route path="/" element={<InterviewTaskList />} />
+                <Route path="/add-task" element={<AddInterviewTask />} />
+                <Route path="/edit-task/:id" element={<EditInterviewTask />} />
+              </Routes>
+            </div>
+          </main>
+        </div>
+      )}
     </>
   );
 }
