@@ -4,40 +4,34 @@ import { FirebaseError } from "firebase/app";
 import type { KeyboardEvent } from "react";
 import { toast } from "sonner";
 
-interface LoginProps {
-  onLoginStart: () => void;
-}
-
-function Login({ onLoginStart }: LoginProps) {
+function Login() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const getErrorMessage = (err: FirebaseError) => {
+  const getErrorMessage = (err: FirebaseError): string => {
     const code = err.code || "";
-
     switch (code) {
+      case "auth/invalid-email":
+        return "Invalid email format";
+
+      case "auth/invalid-credential":
+        return "Invalid email or password";
+
+      case "auth/email-already-in-use":
+        return "Email already registered";
+
+      case "auth/weak-password":
+        return "Password should be at least 6 characters";
+
       case "auth/user-not-found":
         return "No account found with this email";
 
       case "auth/wrong-password":
         return "Incorrect password";
-
-      case "auth/email-already-in-use":
-        return "Email already registered";
-
-      case "auth/invalid-email":
-        return "Invalid email format";
-
-      case "auth/weak-password":
-        return "Password should be at least 6 characters";
-
-      case "auth/invalid-credential":
-        return "Invalid email or password";
 
       default:
         return "Something went wrong. Please try again.";
@@ -47,13 +41,10 @@ function Login({ onLoginStart }: LoginProps) {
   const handleSubmit = async (): Promise<void> => {
     if (loading) return;
 
-    setError("");
     setLoading(true);
 
     try {
       if (isLogin) {
-        onLoginStart();
-
         await login({ email, password });
       } else {
         const user = await signup({ name, email, password });
@@ -63,11 +54,12 @@ function Login({ onLoginStart }: LoginProps) {
         });
       }
     } catch (err: unknown) {
-      console.error(err);
       if (err instanceof FirebaseError) {
-        setError(getErrorMessage(err));
+        toast.error(getErrorMessage(err), { duration: 4000 });
       } else {
-        setError("Something went wrong. Please try again.");
+        toast.error("Something went wrong. Please try again.", {
+          duration: 4000,
+        });
       }
     } finally {
       setLoading(false);
@@ -81,7 +73,6 @@ function Login({ onLoginStart }: LoginProps) {
   };
 
   const toggleMode = (): void => {
-    setError("");
     setName("");
     setEmail("");
     setPassword("");
@@ -165,12 +156,6 @@ function Login({ onLoginStart }: LoginProps) {
               {showPassword ? "Hide" : "Show"}
             </button>
           </div>
-
-          {error && (
-            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-              {error}
-            </div>
-          )}
 
           <button
             onClick={handleSubmit}

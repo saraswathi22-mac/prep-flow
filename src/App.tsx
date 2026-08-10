@@ -103,17 +103,9 @@ function App() {
     } catch (error) {
       console.error("Logout error:", error);
     }
-  };
+  };  
 
-  if (loading) {
-    return <p className="text-center mt-10">Loading...</p>;
-  }
-
-  if (!user) {
-    return <Login onLoginStart={() => (isLoggingIn.current = true)} />;
-  }
-
-  const userName = (user.displayName || user.email?.split("@")[0] || "User")
+  const userName = (user?.displayName || user?.email?.split("@")[0] || "User")
     .replace(/[._-]/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
 
@@ -124,7 +116,7 @@ function App() {
       {loading ? (
         <div>Loading...</div>
       ) : !user ? (
-        <Login onLoginStart={() => (isLoggingIn.current = true)} />
+        <Login />
       ) : (
         <div className="min-h-screen bg-blue-50">
           {/* Navbar */}
@@ -174,9 +166,8 @@ shadow-sm
 
                   <KeyboardArrowDownIcon
                     fontSize="small"
-                    className={`transition-transform duration-200 ${
-                      open ? "rotate-180" : ""
-                    }`}
+                    className={`transition-transform duration-200 ${open ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
 
