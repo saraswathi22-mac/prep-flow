@@ -35,7 +35,7 @@ import { difficultyOrder } from "../../constants/difficultyOrder";
 import { Link } from "react-router-dom";
 import Button from "../../components/Button";
 import { RootState } from "../../store/store";
-import { InterviewTask } from "../../types/task";
+import { InterviewTask, TaskFilter } from "../../types/task";
 
 const InterviewTaskList = () => {
   // Redux
@@ -47,7 +47,7 @@ const InterviewTaskList = () => {
 
   // State
   const [selectedDate, setSelectedDate] = useState(getLocalDate());
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState<TaskFilter>("all");
   const [loading, setLoading] = useState(true);
   const [showWeeklySummary, setShowWeeklySummary] = useState(false);
 
@@ -194,22 +194,26 @@ const InterviewTaskList = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="mt-6 space-y-10 max-w-6xl mx-auto px-4"
+      className="mx-auto max-w-6xl space-y-8 px-4 sm:px-6"
     >
       {/* Welcome Section */}
-      <div className="flex-1">
-        <h1 className="text-2xl md:text-3xl font-semibold text-gray-800">
+      <div>
+        <p className="mb-2 text-sm font-medium text-[#5A9C43]">
+          Your interview prep journey
+        </p>
+
+        <h1 className="text-2xl font-bold tracking-tight text-slate-800 sm:text-3xl">
           👋 {greeting}, {firstName}!
         </h1>
 
-        <p className="mt-2 text-gray-600 leading-relaxed">
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 sm:text-base">
           Stay consistent. Every practice session brings you closer to your next
           opportunity.
         </p>
       </div>
 
       {/* Action Bar */}
-      <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <TopActions
           isToday={isToday}
           hasUnfinishedYesterday={unfinishedYesterdayTasks.length > 0}
@@ -229,13 +233,14 @@ const InterviewTaskList = () => {
           whileHover={{ y: -3 }}
           transition={{ duration: 0.25 }}
           className="
-    rounded-2xl
-    border border-white/10
-    bg-white/70
-    backdrop-blur-xl
-    shadow-[0_8px_30px_rgba(0,0,0,0.08)]
-    p-5
-  "
+            rounded-xl
+            border border-slate-200
+            bg-white
+            p-5
+            shadow-sm
+            transition-shadow
+            hover:shadow-md
+          "
         >
           <DailyProgress
             completed={completedTasks}
@@ -245,20 +250,22 @@ const InterviewTaskList = () => {
       )}
 
       {/* Section Header */}
-      <div className="border-b pb-3">
-        <h2 className="text-xl font-semibold text-gray-800">
+      <div className="border-b border-slate-200 pb-4">
+        <h2 className="text-lg font-bold tracking-tight text-slate-800 sm:text-xl">
           {isToday ? "Today's Interview Tasks" : `Tasks on ${selectedDate}`}
         </h2>
 
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="mt-1.5 text-sm leading-5 text-slate-500">
           {isPastDay
-            ? "Past days are read-only to maintain accurate progress"
+            ? "Past days are read-only to maintain accurate progress."
             : "Stay consistent. Complete today's plan 🚀"}
         </p>
       </div>
 
       {/* Filters */}
-      <TaskFilters filter={filter} onFilterChange={setFilter} />
+      <div className="pt-1">
+        <TaskFilters filter={filter} onFilterChange={setFilter} />
+      </div>
 
       {/* ✅ Kanban Board */}
       <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>

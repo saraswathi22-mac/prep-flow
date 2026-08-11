@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 interface BoardColumnProps {
   id: string;
-  title: string;
+  title: ReactNode;
   children: ReactNode;
   className?: string;
 }
