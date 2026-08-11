@@ -41,15 +41,11 @@ function App() {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuClose = (): void => {
-    setAnchorEl(null);
-  };
-
   const dispatch = useDispatch<AppDispatch>();
 
   const tasks = useSelector((state: RootState) => state.interviewTasks);
 
-  const handleClose = () => {
+  const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
@@ -103,7 +99,7 @@ function App() {
     } catch (error) {
       console.error("Logout error:", error);
     }
-  };  
+  };
 
   const userName = (user?.displayName || user?.email?.split("@")[0] || "User")
     .replace(/[._-]/g, " ")
@@ -120,17 +116,17 @@ function App() {
       ) : (
         <div className="min-h-screen bg-blue-50">
           {/* Navbar */}
-          <header className="sticky top-0 z-50 h-16 bg-white border-b border-gray-200 shadow-sm">
-            <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+          <header className="sticky top-0 z-50 h-16 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
+            <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
               {/* Logo */}
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 <img
                   src="/prep-flow.png"
                   alt="PrepFlow"
-                  className="h-11 w-10 object-contain"
+                  className="h-10 w-10 object-contain"
                 />
 
-                <h1 className="text-2xl font-bold tracking-tight text-gray-800">
+                <h1 className="text-xl font-bold tracking-tight text-slate-800 sm:text-2xl">
                   PrepFlow
                 </h1>
               </div>
@@ -141,6 +137,7 @@ function App() {
                 <button
                   type="button"
                   onClick={handleMenuOpen}
+                  aria-label={`Open profile menu for ${userName}`}
                   className="flex items-center gap-2 rounded-lg px-2 py-1 transition hover:bg-gray-100"
                 >
                   {/* Avatar */}
@@ -148,7 +145,7 @@ function App() {
                     className="
 flex h-10 w-10 items-center justify-center
 rounded-full
-bg-green-600
+bg-[#5A9C43]
 text-white
 font-semibold
 shadow-sm
@@ -159,15 +156,16 @@ shadow-sm
 
                   {/* User Name */}
                   <div className="hidden sm:block text-left">
-                    <p className="text-sm font-medium text-gray-800">
+                    <p className="text-sm font-semibold text-slate-700">
                       {userName}
                     </p>
                   </div>
 
                   <KeyboardArrowDownIcon
                     fontSize="small"
-                    className={`transition-transform duration-200 ${open ? "rotate-180" : ""
-                      }`}
+                    className={`transition-transform duration-200 ${
+                      open ? "rotate-180" : ""
+                    }`}
                   />
                 </button>
 
@@ -175,7 +173,7 @@ shadow-sm
                 <Menu
                   anchorEl={anchorEl}
                   open={open}
-                  onClose={handleClose}
+                  onClose={handleMenuClose}
                   slotProps={{
                     paper: {
                       elevation: 3,

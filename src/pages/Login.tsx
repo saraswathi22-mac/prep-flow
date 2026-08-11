@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { login, signup } from "../firebase/auth";
 import { FirebaseError } from "firebase/app";
-import type { KeyboardEvent } from "react";
 import { toast } from "sonner";
 
 function Login() {
@@ -68,12 +67,6 @@ function Login() {
       }
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSubmit();
     }
   };
 
