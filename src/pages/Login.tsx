@@ -38,6 +38,11 @@ function Login() {
     }
   };
 
+  const isFormValid =
+    email.trim() !== "" &&
+    password.trim() !== "" &&
+    (isLogin || name.trim() !== "");
+
   const handleSubmit = async (): Promise<void> => {
     if (loading) return;
 
@@ -117,15 +122,20 @@ function Login() {
         </h2>
 
         {/* Form */}
-        <div className="space-y-4">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            void handleSubmit();
+          }}
+          className="space-y-4"
+        >
           {!isLogin && (
             <input
               type="text"
               placeholder="Your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-700 outline-none transition-all focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-700 outline-none transition-all placeholder:text-slate-400 focus:border-[#5A9C43] focus:ring-4 focus:ring-[#5A9C43]/10"
             />
           )}
 
@@ -134,7 +144,6 @@ function Login() {
             placeholder="Email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            onKeyDown={handleKeyDown}
             className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-700 outline-none transition-all focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
           />
 
@@ -143,23 +152,36 @@ function Login() {
               type={showPassword ? "text" : "password"}
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={handleKeyDown}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPassword(value);
+
+                if (!value) {
+                  setShowPassword(false);
+                }
+              }}
               className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 pr-16 text-slate-700 outline-none transition-all focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
             />
 
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-500 hover:text-slate-700"
+              disabled={!password.trim()}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-md px-1 text-sm font-medium text-slate-500 transition hover:text-slate-700
+              focus:outline-none focus:ring-2 focus:ring-[#5A9C43]/30
+              disabled:cursor-not-allowed
+              disabled:text-slate-300
+              disabled:hover:text-slate-300"
             >
               {showPassword ? "Hide" : "Show"}
             </button>
           </div>
 
           <button
+            type="submit"
             onClick={handleSubmit}
-            disabled={loading}
+            disabled={loading || !isFormValid}
             className="w-full rounded-xl py-3 font-medium text-white transition-all duration-200 hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70"
             style={{
               backgroundColor: BRAND_GREEN,
@@ -171,13 +193,18 @@ function Login() {
               (e.currentTarget.style.backgroundColor = BRAND_GREEN)
             }
           >
-            {loading
-              ? "Please wait..."
-              : isLogin
-                ? "Sign In"
-                : "Create Account"}
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                Please wait...
+              </span>
+            ) : isLogin ? (
+              "Sign In"
+            ) : (
+              "Create Account"
+            )}
           </button>
-        </div>
+        </form>
 
         {/* Features */}
         <div className="mt-6 flex flex-wrap justify-center gap-4 text-xs text-slate-500">
