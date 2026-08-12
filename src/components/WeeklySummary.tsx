@@ -105,7 +105,7 @@ const WeeklySummary = ({ tasks }: WeeklySummaryProps) => {
     }
   }
 
-  let insightMessage = insights.join(" ");
+  const insightMessage = insights.join(" ");
 
   return (
     <div className="space-y-6 md:space-y-8">
@@ -122,17 +122,19 @@ const WeeklySummary = ({ tasks }: WeeklySummaryProps) => {
 
       {/* Progress */}
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <p className="text-sm font-semibold text-gray-700">Weekly Progress</p>
+        <div className="mb-3 flex items-center justify-between">
+          <p className="text-sm font-semibold text-slate-700">
+            Weekly Progress
+          </p>
 
-          <p className="text-lg font-bold text-blue-600">
+          <p className="text-lg font-bold text-[#5A9C43]">
             {completionPercent}%
           </p>
         </div>
 
-        <div className="w-full h-3 rounded-full bg-gray-200 overflow-hidden">
+        <div className="h-3 w-full overflow-hidden rounded-full bg-slate-100">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-700"
+            className="h-full rounded-full bg-[#5A9C43] transition-all duration-700"
             style={{ width: `${completionPercent}%` }}
           />
         </div>
@@ -148,12 +150,12 @@ const WeeklySummary = ({ tasks }: WeeklySummaryProps) => {
       </div>
 
       {/* Weekly Insight */}
-      <div className="rounded-2xl border border-blue-100 bg-blue-50 p-5">
-        <h4 className="text-sm font-semibold text-blue-800 mb-2">
+      <div className="rounded-xl border border-[#5A9C43]/20 bg-[#5A9C43]/5 p-5">
+        <h4 className="mb-2 text-sm font-semibold text-[#4C8A38]">
           ⚡ Weekly Insight
         </h4>
 
-        <p className="text-sm leading-6 text-blue-700">{insightMessage}</p>
+        <p className="text-sm leading-6 text-slate-600">{insightMessage}</p>
       </div>
     </div>
   );
@@ -163,16 +165,16 @@ const WeeklySummary = ({ tasks }: WeeklySummaryProps) => {
 
 const StatCard = ({ label, value, color = "gray" }: StatCardProps) => {
   const colorMap: Record<StatCardColor, string> = {
-    green: "text-green-600",
-    yellow: "text-yellow-600",
-    gray: "text-gray-700",
+    green: "text-emerald-600",
+    yellow: "text-amber-600",
+    gray: "text-slate-700",
   };
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-gradient-to-br from-white to-gray-50 p-4 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
-      <p className="text-xs font-medium text-gray-500">{label}</p>
+    <div className="rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm transition-shadow hover:shadow-md">
+      <p className="text-xs font-medium text-slate-500">{label}</p>
 
-      <p className={`mt-2 text-xl md:text-2xl font-bold ${colorMap[color]}`}>
+      <p className={`mt-2 text-xl font-bold md:text-2xl ${colorMap[color]}`}>
         {value}
       </p>
     </div>

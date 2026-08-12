@@ -330,7 +330,12 @@ const InterviewTaskList = () => {
                 >
                   <div className="space-y-4">
                     {loading ? (
-                      <div className="text-sm text-gray-400">Loading...</div>
+                      <div className="flex items-center justify-center py-10">
+                        <div className="flex items-center gap-2 text-sm text-slate-400">
+                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-200 border-t-[#5A9C43]" />
+                          Loading tasks...
+                        </div>
+                      </div>
                     ) : columnTasks.length ? (
                       columnTasks.map((task) => (
                         <motion.div
@@ -351,7 +356,7 @@ const InterviewTaskList = () => {
                       ))
                     ) : (
                       <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
-                        <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-white/50 backdrop-blur-sm shadow-sm">
+                        <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-white backdrop-blur-sm shadow-sm">
                           <span className="text-4xl">
                             {status === "todo"
                               ? "📋"
@@ -361,7 +366,7 @@ const InterviewTaskList = () => {
                           </span>
                         </div>
 
-                        <h3 className="text-lg font-semibold text-gray-800">
+                        <h3 className="text-lg font-semibold text-slate-800">
                           {status === "todo"
                             ? "No tasks to start"
                             : status === "inProgress"
@@ -369,7 +374,7 @@ const InterviewTaskList = () => {
                               : "No completed tasks yet"}
                         </h3>
 
-                        <p className="mt-2 max-w-[220px] text-sm leading-6 text-gray-500">
+                        <p className="mt-2 max-w-[220px] text-sm leading-6 text-slate-500">
                           {status === "todo"
                             ? "Create your first interview task to begin today's plan."
                             : status === "inProgress"
@@ -430,18 +435,36 @@ const InterviewTaskList = () => {
       </DndContext>
 
       {/* Weekly Summary */}
-      <div className="pt-10 mt-10 border-t border-gray-100">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-800">
-            📊 Weekly Analytics
-            <span className="ml-2 text-sm text-gray-500">
-              ({currentWeekId})
-            </span>
-          </h2>
+      <div className="mt-10 border-t border-slate-200 pt-8">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-bold tracking-tight text-slate-800 sm:text-xl">
+              📊 Weekly Analytics
+            </h2>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Review your interview preparation this week
+              <span className="ml-1 text-slate-400">· {currentWeekId}</span>
+            </p>
+          </div>
 
           <button
+            type="button"
             onClick={() => setShowWeeklySummary((prev) => !prev)}
-            className="text-sm font-medium text-blue-600 hover:text-blue-700 transition"
+            className="
+        shrink-0
+        rounded-lg
+        px-3
+        py-1.5
+        text-sm
+        font-medium
+        text-[#5A9C43]
+        transition-colors
+        hover:bg-[#5A9C43]/10
+        focus:outline-none
+        focus:ring-2
+        focus:ring-[#5A9C43]/20
+      "
           >
             {showWeeklySummary ? "Hide" : "View"}
           </button>

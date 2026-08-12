@@ -27,16 +27,18 @@ const TECH_COLORS: Record<string, string> = {
 };
 
 function TechStackCoverage({ techStackStats }: TechStackCoverageProps) {
-  const techStack: TechStackData[] = Object.entries(techStackStats).map(([name, value]) => ({
-    name,
-    value,
-  }));
+  const techStack: TechStackData[] = Object.entries(techStackStats).map(
+    ([name, value]) => ({
+      name,
+      value,
+    }),
+  );
 
   const total = techStack.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="rounded-2xl border border-gray-100 p-5">
-      <h4 className="mb-4 text-sm font-semibold text-gray-800">
+    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h4 className="mb-4 text-sm font-semibold text-slate-800">
         🚀 Tech Stack Coverage
       </h4>
 
@@ -52,7 +54,7 @@ function TechStackCoverage({ techStackStats }: TechStackCoverageProps) {
                   innerRadius={60}
                   outerRadius={90}
                   paddingAngle={3}
-                 >
+                >
                   {techStack.map((item) => (
                     <Cell
                       key={item.name}
@@ -61,7 +63,11 @@ function TechStackCoverage({ techStackStats }: TechStackCoverageProps) {
                   ))}
                   <Label
                     content={({ viewBox }) => {
-                       if (!viewBox || !("cx" in viewBox) || !("cy" in viewBox)) {
+                      if (
+                        !viewBox ||
+                        !("cx" in viewBox) ||
+                        !("cy" in viewBox)
+                      ) {
                         return null;
                       }
 
@@ -79,12 +85,12 @@ function TechStackCoverage({ techStackStats }: TechStackCoverageProps) {
                             dy="-8"
                             fontSize="24"
                             fontWeight="700"
-                            fill="#111827"
+                            fill="#1E293B"
                           >
                             {total}
                           </tspan>
 
-                          <tspan x={cx} dy="22" fontSize="14" fill="#6B7280">
+                          <tspan x={cx} dy="22" fontSize="14" fill="#64748B">
                             {total === 1 ? "Task" : "Tasks"}
                           </tspan>
                         </text>
@@ -117,12 +123,12 @@ function TechStackCoverage({ techStackStats }: TechStackCoverageProps) {
                     }}
                   />
 
-                  <span className="text-gray-700">
+                  <span className="text-sm text-slate-600">
                     {item.name} ({Math.round((item.value / total) * 100)}%)
                   </span>
                 </div>
 
-                <span className="font-semibold text-gray-900">
+                <span className="font-semibold text-slate-800">
                   {item.value}
                 </span>
               </div>
@@ -130,7 +136,7 @@ function TechStackCoverage({ techStackStats }: TechStackCoverageProps) {
           </div>
         </>
       ) : (
-        <div className="rounded-xl border border-dashed border-gray-200 p-5 text-center text-sm text-gray-400">
+        <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-5 text-center text-sm text-slate-400">
           No tasks this week
         </div>
       )}

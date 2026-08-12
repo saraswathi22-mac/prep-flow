@@ -19,8 +19,8 @@ interface DailyActivityChartProps {
 
 function DailyActivityChart({ data }: DailyActivityChartProps) {
   return (
-    <div className="rounded-2xl border border-gray-100 p-5">
-      <h4 className="mb-4 text-sm font-semibold text-gray-800">
+    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h4 className="mb-4 text-sm font-semibold text-slate-800">
         📊 Daily Activity
       </h4>
 
@@ -40,10 +40,22 @@ function DailyActivityChart({ data }: DailyActivityChartProps) {
                 domain={[0, "dataMax + 1"]}
                 axisLine={false}
                 tickLine={false}
+                tick={{
+                  fill: "#64748B",
+                  fontSize: 12,
+                }}
               />
 
               {/* Weekdays at the bottom */}
-              <XAxis dataKey="day" axisLine={false} tickLine={false} />
+              <XAxis
+                dataKey="day"
+                axisLine={false}
+                tickLine={false}
+                tick={{
+                  fill: "#64748B",
+                  fontSize: 12,
+                }}
+              />
 
               <Tooltip
                 cursor={{ fill: "#F3F4F6" }}
@@ -63,7 +75,7 @@ function DailyActivityChart({ data }: DailyActivityChartProps) {
           </ResponsiveContainer>
         </div>
       ) : (
-        <div className="rounded-xl border border-dashed border-gray-200 p-5 text-center text-sm text-gray-400">
+        <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-5 text-center text-sm text-slate-400">
           No activity this week
         </div>
       )}
