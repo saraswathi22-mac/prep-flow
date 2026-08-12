@@ -44,14 +44,14 @@ const TaskCard = ({
 
   const difficultyColor = {
     hard: "bg-red-100 text-red-700",
-    medium: "bg-yellow-100 text-yellow-700",
-    easy: "bg-green-100 text-green-700",
+    medium: "bg-amber-100 text-amber-700",
+    easy: "bg-emerald-100 text-emerald-700",
   };
 
   const statusColor = {
-    done: "text-green-600",
-    skipped: "text-yellow-600",
-    todo: "text-gray-500",
+    done: "text-emerald-600",
+    skipped: "text-amber-600",
+    todo: "text-slate-500",
     inProgress: "text-blue-600",
   };
 
@@ -79,19 +79,11 @@ const TaskCard = ({
       }}
       className={`
         group
-        rounded-2xl
-        p-4
-
-        flex
-        flex-col
-        gap-3
-
-        transition-all
-        duration-300
-
+        flex flex-col gap-3
+        rounded-xl
         border
-        backdrop-blur-xl
-
+        p-4
+        transition-shadow duration-200
         cursor-grab
         active:cursor-grabbing
 
@@ -100,9 +92,8 @@ const TaskCard = ({
             ? `
               z-50
               ring-2
-              ring-blue-200
-
-              shadow-[0_25px_60px_rgba(59,130,246,0.25)]
+              ring-[#5A9C43]/30
+              shadow-lg
             `
             : ""
         }
@@ -110,17 +101,15 @@ const TaskCard = ({
         ${
           isPastDay
             ? `
-              bg-gray-50/80
-              border-gray-200
+              border-slate-200
+              bg-slate-50
               opacity-70
             `
             : `
-              bg-white/80
-              border-white/30
-
-              shadow-[0_8px_30px_rgba(0,0,0,0.06)]
-
-              hover:shadow-[0_15px_45px_rgba(59,130,246,0.12)]
+              border-slate-200
+              bg-white
+              shadow-sm
+              hover:shadow-md
             `
         }
       `}
@@ -135,8 +124,8 @@ const TaskCard = ({
           cursor-grab
           active:cursor-grabbing
 
-          text-gray-400
-          hover:text-blue-500
+          text-slate-400
+          hover:text-[#5A9C43]
 
           transition-colors
         "
@@ -149,13 +138,13 @@ const TaskCard = ({
         <h3
           className="
             font-semibold
-            text-gray-900
+            text-slate-800
             text-sm
             leading-snug
 
             transition-colors
 
-            group-hover:text-indigo-600
+            group-hover:text-[#5A9C43]
           "
         >
           {task.question}
@@ -186,17 +175,13 @@ const TaskCard = ({
       <div className="flex items-center gap-2 text-xs flex-wrap">
         <span
           className="
+            rounded-full
+            bg-slate-100
             px-2.5
             py-1
-
-            rounded-full
-
-            bg-gradient-to-r
-            from-slate-100
-            to-slate-200
-
-            text-gray-700
+            text-xs
             font-medium
+            text-slate-700
           "
         >
           {techStack}
@@ -234,7 +219,7 @@ const TaskCard = ({
             mt-1
 
             border-t
-            border-gray-100
+            border-slate-100
           "
         >
           <div className="flex gap-2">
@@ -246,19 +231,18 @@ const TaskCard = ({
                   onStatusChange(task.id, "inProgress");
                 }}
                 className="
-                  text-xs
-
+                  rounded-lg
+                  bg-blue-50
                   px-3
                   py-1.5
-
-                  rounded-lg
-
-                  bg-blue-50
-                  text-blue-600
-
+                  text-xs
+                  font-medium
+                  text-blue-700
+                  transition-colors
                   hover:bg-blue-100
-
-                  transition-all
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-blue-200
                 "
               >
                 ▶ Start
@@ -273,19 +257,18 @@ const TaskCard = ({
                   onStatusChange(task.id, "done");
                 }}
                 className="
-                  text-xs
-
+                  rounded-lg
+                  bg-emerald-50
                   px-3
                   py-1.5
-
-                  rounded-lg
-
-                  bg-green-50
-                  text-green-600
-
-                  hover:bg-green-100
-
-                  transition-all
+                  text-xs
+                  font-medium
+                  text-emerald-700
+                  transition-colors
+                  hover:bg-emerald-100
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-emerald-200
                 "
               >
                 ✓ Done
@@ -297,18 +280,18 @@ const TaskCard = ({
             <Link
               to={`/edit-task/${task.id}`}
               className="
-                text-xs
-
+                rounded-lg
                 px-2.5
                 py-1.5
-
-                rounded-lg
-
-                text-blue-600
-
-                hover:bg-blue-50
-
-                transition-all
+                text-xs
+                font-medium
+                text-slate-500
+                transition-colors
+                hover:bg-slate-100
+                hover:text-slate-700
+                focus:outline-none
+                focus:ring-2
+                focus:ring-slate-200
               "
             >
               ✏
@@ -317,18 +300,18 @@ const TaskCard = ({
             <button
               onClick={() => onDelete(task)}
               className="
-                text-xs
-
+                rounded-lg
                 px-2.5
                 py-1.5
-
-                rounded-lg
-
-                text-red-600
-
+                text-xs
+                font-medium
+                text-red-500
+                transition-colors
                 hover:bg-red-50
-
-                transition-all
+                hover:text-red-600
+                focus:outline-none
+                focus:ring-2
+                focus:ring-red-200
               "
             >
               🗑

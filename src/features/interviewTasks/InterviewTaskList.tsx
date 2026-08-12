@@ -289,69 +289,40 @@ const InterviewTaskList = () => {
 
                     <span
                       className={`
-          text-xs
-          px-2 py-0.5
-          rounded-full
-          font-medium
+                        text-xs
+                        px-2 py-0.5
+                        rounded-full
+                        font-medium
 
-          ${
-            status === "todo"
-              ? "bg-gray-200 text-gray-700"
-              : status === "inProgress"
-                ? "bg-yellow-200 text-yellow-800"
-                : "bg-green-200 text-green-800"
-          }
-        `}
+                        ${
+                          status === "todo"
+                            ? "bg-slate-200 text-slate-700"
+                            : status === "inProgress"
+                              ? "bg-amber-200 text-amber-800"
+                              : "bg-emerald-200 text-emerald-800"
+                        }
+                      `}
                     >
                       {columnTasks.length}
                     </span>
                   </div>
                 }
                 className={`
-                  rounded-[28px]
-                  p-5
                   min-h-[340px]
-                  
-                  backdrop-blur-2xl
-                  
-                  border border-white/30
-                  
-                  transition-all duration-500
-                  
-                  hover:-translate-y-2
-                  hover:scale-[1.01]
-                  
-                  shadow-[0_10px_35px_rgba(0,0,0,0.08)]
-                  
+                  rounded-xl
+                  border
+                  p-4
+                  shadow-sm
+                  transition-shadow
+                  hover:shadow-md
                   ${
                     status === "todo"
-                      ? `
-                        bg-gradient-to-br
-                        from-slate-100
-                        via-slate-50
-                        to-slate-200
-                  
-                        hover:shadow-slate-300/30
-                      `
+                      ? "border-slate-200 bg-slate-50"
                       : status === "inProgress"
-                        ? `
-                        bg-gradient-to-br
-                        from-yellow-50
-                        via-orange-50
-                        to-amber-100
-                  
-                        hover:shadow-yellow-300/30
-                      `
-                        : `
-                        bg-gradient-to-br
-                        from-emerald-50
-                        via-green-50
-                        to-teal-100
-                  
-                        hover:shadow-emerald-300/30
-                      `
+                        ? "border-amber-200 bg-amber-50/60"
+                        : "border-emerald-200 bg-emerald-50/60"
                   }
-                  `}
+                `}
               >
                 <SortableContext
                   items={columnTasks.map((task) => task.id)}
