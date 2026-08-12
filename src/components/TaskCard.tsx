@@ -134,16 +134,16 @@ const TaskCard = ({
       </div>
 
       {/* 🔷 Header */}
-      <div className="flex justify-between items-start gap-3">
+      <div className="flex justify-between items-start gap-2">
         <h3
           className="
-            font-semibold
-            text-slate-800
+            min-w-0
+            flex-1
             text-sm
+            font-semibold
             leading-snug
-
+            text-slate-800
             transition-colors
-
             group-hover:text-[#5A9C43]
           "
         >
