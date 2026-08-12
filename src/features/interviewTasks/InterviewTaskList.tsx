@@ -471,7 +471,7 @@ const InterviewTaskList = () => {
         </div>
 
         {showWeeklySummary && (
-          <div className="mt-5 rounded-3xl border border-gray-100 bg-white p-6 md:p-7 shadow-sm">
+          <div className="mt-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
             <WeeklySummary tasks={weeklyTasks} />
           </div>
         )}
