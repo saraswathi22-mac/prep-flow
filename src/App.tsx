@@ -110,7 +110,24 @@ function App() {
       <Toaster position="top-right" richColors closeButton />
 
       {loading ? (
-        <div>Loading...</div>
+        <div className="flex min-h-screen items-center justify-center bg-blue-50 px-4">
+          <div className="flex flex-col items-center text-center">
+            <img
+              src="/prep-flow.png"
+              alt="PrepFlow"
+              className="h-16 w-16 object-contain"
+            />
+
+            <h1 className="mt-3 text-2xl font-bold tracking-tight text-slate-800">
+              PrepFlow
+            </h1>
+
+            <div className="mt-5 flex items-center gap-2 text-sm text-slate-500">
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-200 border-t-[#5A9C43]" />
+              Getting PrepFlow ready...
+            </div>
+          </div>
+        </div>
       ) : !user ? (
         <Login />
       ) : (
