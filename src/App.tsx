@@ -196,7 +196,11 @@ shadow-sm
                       elevation: 3,
                       sx: {
                         mt: 1,
-                        minWidth: 200,
+                        minWidth: {
+                          xs: 120,
+                          sm: 140,
+                          md: 160,
+                        },
                         borderRadius: 2,
                       },
                     },
@@ -207,8 +211,33 @@ shadow-sm
                       handleMenuClose();
                       handleLogout();
                     }}
+                    sx={{
+                      px: {
+                        xs: 1.25,
+                        sm: 1.5,
+                        md: 2,
+                      },
+                      py: {
+                        xs: 0.5,
+                        sm: 0.75,
+                        md: 1,
+                      },
+                      fontSize: {
+                        xs: "0.8rem",
+                        sm: "0.85rem",
+                        md: "0.875rem",
+                      },
+                    }}
                   >
-                    <ListItemIcon>
+                    <ListItemIcon
+                      sx={{
+                        minWidth: {
+                          xs: 28,
+                          sm: 30,
+                          md: 36,
+                        },
+                      }}
+                    >
                       <LogoutOutlinedIcon color="error" fontSize="small" />
                     </ListItemIcon>
                     Logout
