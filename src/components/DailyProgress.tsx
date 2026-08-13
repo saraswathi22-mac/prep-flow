@@ -63,72 +63,61 @@ const DailyProgress = ({ completed = 0, total = 0 }: DailyProgressProps) => {
       "
     >
       {/* 🔷 Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          {/* <motion.span
-            animate={{
-              rotate: [0, 8, -8, 0],
-            }}
-            transition={{
-              repeat: Infinity,
-              duration: 3,
-            }}
-            className="text-2xl"
-          >
-            📊
-          </motion.span> */}
-          <TrendingUpRounded className="text-violet-600" fontSize="medium" />
-          <div>
-            <h3 className="text-lg font-bold text-gray-800">
+      <div className="flex items-start gap-3">
+        <TrendingUpRounded
+          className="mt-1 shrink-0 text-violet-600"
+          fontSize="medium"
+        />
+
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="text-lg font-bold leading-6 text-gray-800">
               Today's Progress
             </h3>
+
+            {total > 0 ? (
+              <motion.div
+                key={percent}
+                initial={{
+                  scale: 0.8,
+                  opacity: 0,
+                }}
+                animate={{
+                  scale: 1,
+                  opacity: 1,
+                }}
+                className={`
+            flex shrink-0 items-center justify-center
+            rounded-full
+            px-3 py-1.5
+            text-sm
+            font-bold
+            ${
+              percent === 100
+                ? "bg-green-100 text-green-700"
+                : "bg-indigo-50 text-indigo-600"
+            }
+          `}
+              >
+                {percent}%
+              </motion.div>
+            ) : (
+              <div
+                className="
+            flex shrink-0 items-center justify-center
+            rounded-full
+            bg-violet-100
+            px-3 py-1.5
+            text-sm
+            font-semibold
+            text-violet-700
+          "
+              >
+                Ready
+              </div>
+            )}
           </div>
         </div>
-
-        {total > 0 ? (
-          <motion.div
-            key={percent}
-            initial={{
-              scale: 0.8,
-              opacity: 0,
-            }}
-            animate={{
-              scale: 1,
-              opacity: 1,
-            }}
-            className={`
-  flex items-center justify-center
-  min-w-[84px]
-  h-12
-  rounded-full
-  px-4
-  text-lg
-  font-bold
-  ${
-    percent === 100
-      ? "bg-green-100 text-green-700"
-      : "bg-indigo-50 text-indigo-600"
-  }
-`}
-          >
-            {percent}%
-          </motion.div>
-        ) : (
-          <div
-            className="
-flex items-center justify-center
-h-11
-rounded-full
-bg-violet-100
-px-4
-text-sm
-font-semibold
-text-violet-700
-"
-          >
-            Ready
-          </div>
-        )}
       </div>
 
       {/* 🔷 Progress Bar */}
