@@ -2,6 +2,7 @@ import {
   getWeeklyStats,
   groupByKey,
   getDailyActivity,
+  getCurrentStreak,
 } from "../helpers/weeklyStats";
 import TechStackCoverage from "./TechStackCoverage";
 import DailyActivityChart from "./DailyActivityChart";
@@ -25,6 +26,8 @@ const WeeklySummary = ({ tasks }: WeeklySummaryProps) => {
 
   const completedTasks = tasks.filter((task) => task.status === "done");
   const completedDailyActivity = getDailyActivity(completedTasks);
+
+  const streak = getCurrentStreak(tasks);
 
   const maxTasks = Math.max(...completedDailyActivity.map((day) => day.tasks));
 
@@ -117,7 +120,15 @@ const WeeklySummary = ({ tasks }: WeeklySummaryProps) => {
 
         <StatCard label="Pending" value={stats.todo} color="gray" />
 
-        <StatCard label="🔥 Streak" value="5 Days" color="yellow" />
+        <StatCard
+          label="🔥 Streak"
+          value={
+            streak > 0
+              ? `${streak} ${streak === 1 ? "day" : "days"} streak`
+              : "Start your streak today"
+          }
+          color="yellow"
+        />
       </div>
 
       {/* Progress */}
@@ -174,7 +185,13 @@ const StatCard = ({ label, value, color = "gray" }: StatCardProps) => {
     <div className="rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm transition-shadow hover:shadow-md">
       <p className="text-xs font-medium text-slate-500">{label}</p>
 
-      <p className={`mt-2 text-xl font-bold md:text-2xl ${colorMap[color]}`}>
+      <p
+        className={`mt-2 font-bold ${
+          typeof value === "string" && value.includes("Start your streak")
+            ? "text-sm md:text-md"
+            : "text-xl md:text-2xl"
+        } ${colorMap[color]}`}
+      >
         {value}
       </p>
     </div>
