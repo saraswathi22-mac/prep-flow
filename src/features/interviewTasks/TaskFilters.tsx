@@ -28,21 +28,25 @@ const filters: FilterOption[] = [
 const TaskFilters = ({ filter, onFilterChange }: TaskFiltersProps) => {
   return (
     <div>
-      <p className="text-sm text-gray-500 mb-2">Filter tasks</p>
+      <p className="mb-2 text-sm text-gray-500">Filter tasks</p>
 
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="mb-4 flex flex-nowrap gap-2">
         {filters.map(({ label, value }) => (
           <button
             key={value}
             onClick={() => onFilterChange(value)}
             className={`
-              px-4 py-2 rounded-xl
-              transition-all duration-300
+              whitespace-nowrap
+              rounded-xl
               border border-white/10
+              px-3 py-2
+              text-sm
+              transition-all duration-300
               backdrop-blur-md
               shadow-sm
               hover:scale-[1.03]
               hover:shadow-lg
+              sm:px-4
               ${
                 filter === value
                   ? "bg-blue-500 text-white"
