@@ -214,17 +214,21 @@ const InterviewTaskList = () => {
 
       {/* Action Bar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <TopActions
-          isToday={isToday}
-          hasUnfinishedYesterday={unfinishedYesterdayTasks.length > 0}
-          onRollover={rolloverUnfinishedTasks}
-        />
+        <div className="order-1 sm:order-2">
+          <DatePicker
+            selectedDate={selectedDate}
+            max={today}
+            onChange={setSelectedDate}
+          />
+        </div>
 
-        <DatePicker
-          selectedDate={selectedDate}
-          max={today}
-          onChange={setSelectedDate}
-        />
+        <div className="order-2 sm:order-1">
+          <TopActions
+            isToday={isToday}
+            hasUnfinishedYesterday={unfinishedYesterdayTasks.length > 0}
+            onRollover={rolloverUnfinishedTasks}
+          />
+        </div>
       </div>
 
       {/* Daily Progress */}

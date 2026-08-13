@@ -5,7 +5,7 @@ interface DatePickerProps {
   selectedDate: string;
   max: string;
   onChange: (date: string) => void;
-} 
+}
 
 const DatePicker = ({ selectedDate, max, onChange }: DatePickerProps) => {
   return (
@@ -22,15 +22,16 @@ const DatePicker = ({ selectedDate, max, onChange }: DatePickerProps) => {
         duration: 0.35,
       }}
       className="
-        mt-6 sm:mt-0
         flex
+        w-full
         flex-col
         gap-2
+        sm:w-auto
         sm:flex-row
         sm:items-center
       "
     >
-      {/* 🔷 Label */}
+      {/* Label */}
       <motion.label
         whileHover={{
           scale: 1.03,
@@ -44,7 +45,7 @@ const DatePicker = ({ selectedDate, max, onChange }: DatePickerProps) => {
         Select Date
       </motion.label>
 
-      {/* 🔷 Input Wrapper */}
+      {/* Input Wrapper */}
       <motion.div
         whileHover={{
           y: -2,
@@ -56,7 +57,7 @@ const DatePicker = ({ selectedDate, max, onChange }: DatePickerProps) => {
         transition={{
           duration: 0.2,
         }}
-        className="relative"
+        className="relative w-full sm:w-auto"
       >
         <motion.input
           type="date"
@@ -67,8 +68,8 @@ const DatePicker = ({ selectedDate, max, onChange }: DatePickerProps) => {
             scale: 1.01,
           }}
           className="
+            h-12
             w-full
-            sm:w-auto
             appearance-none
             rounded-2xl
             border border-white/30
@@ -78,7 +79,6 @@ const DatePicker = ({ selectedDate, max, onChange }: DatePickerProps) => {
             to-purple-50
             pl-4
             pr-10
-            py-2.5
             text-sm
             text-gray-700
             backdrop-blur-xl
@@ -90,6 +90,9 @@ const DatePicker = ({ selectedDate, max, onChange }: DatePickerProps) => {
             focus:ring-4
             focus:ring-blue-200/50
             hover:shadow-[0_12px_40px_rgba(139,92,246,0.15)]
+            sm:h-auto
+            sm:w-auto
+            sm:py-2.5
           "
         />
 
