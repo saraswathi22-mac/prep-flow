@@ -3,7 +3,11 @@ import { login, signup } from "../firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { toast } from "sonner";
 
-function Login() {
+interface LoginProps {
+  onLoginStart: () => void;
+}
+
+function Login({ onLoginStart }: LoginProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,6 +53,7 @@ function Login() {
 
     try {
       if (isLogin) {
+        onLoginStart();
         await login({ email, password });
       } else {
         const user = await signup({ name, email, password });
@@ -173,7 +178,6 @@ function Login() {
 
           <button
             type="submit"
-            onClick={handleSubmit}
             disabled={loading || !isFormValid}
             className="w-full rounded-xl py-3 font-medium text-white transition-all duration-200 hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70"
             style={{

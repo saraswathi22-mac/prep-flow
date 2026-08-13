@@ -101,6 +101,10 @@ function App() {
     }
   };
 
+  const handleLoginStart = () => {
+  isLoggingIn.current = true;
+};
+
   const userName = (user?.displayName || user?.email?.split("@")[0] || "User")
     .replace(/[._-]/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
@@ -129,7 +133,7 @@ function App() {
           </div>
         </div>
       ) : !user ? (
-        <Login />
+        <Login onLoginStart={handleLoginStart} />
       ) : (
         <div className="min-h-screen bg-blue-50">
           {/* Navbar */}
