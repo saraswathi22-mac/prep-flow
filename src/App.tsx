@@ -22,6 +22,9 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 
+import TechStackSetup from "./pages/TechStackSetup";
+import { loadTechStacks } from "./firebase/techStackStorage";
+
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import type { MouseEvent } from "react";
@@ -32,6 +35,8 @@ import { AppDispatch, RootState } from "./store/store";
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [hasTechStack, setHasTechStack] = useState(false);
+  const [techStackLoading, setTechStackLoading] = useState(true);
   const isLoggingIn = useRef(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -56,8 +61,15 @@ function App() {
         setUser(currentUser);
 
         if (currentUser) {
-          const savedTasks = await loadTasks(currentUser);
+          const [savedTasks, savedTechStacks] = await Promise.all([
+            loadTasks(currentUser),
+            loadTechStacks(currentUser),
+          ]);
+
           dispatch(setTasks(savedTasks));
+
+          setHasTechStack(savedTechStacks.length >= 5);
+          setTechStackLoading(false);
 
           if (isLoggingIn.current) {
             toast.success(
@@ -73,6 +85,8 @@ function App() {
           }
         } else {
           dispatch(setTasks([]));
+          setHasTechStack(false);
+          setTechStackLoading(false);
         }
 
         setLoading(false);
@@ -102,8 +116,8 @@ function App() {
   };
 
   const handleLoginStart = () => {
-  isLoggingIn.current = true;
-};
+    isLoggingIn.current = true;
+  };
 
   const userName = (user?.displayName || user?.email?.split("@")[0] || "User")
     .replace(/[._-]/g, " ")
@@ -113,7 +127,7 @@ function App() {
     <>
       <Toaster position="top-right" richColors closeButton />
 
-      {loading ? (
+      {loading || techStackLoading ? (
         <div className="flex min-h-screen items-center justify-center bg-blue-50 px-4">
           <div className="flex flex-col items-center text-center">
             <img
@@ -134,6 +148,8 @@ function App() {
         </div>
       ) : !user ? (
         <Login onLoginStart={handleLoginStart} />
+      ) : !hasTechStack ? (
+        <TechStackSetup onComplete={() => setHasTechStack(true)} />
       ) : (
         <div className="min-h-screen bg-blue-50">
           {/* Navbar */}
