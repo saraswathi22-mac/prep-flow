@@ -53,7 +53,7 @@ const AddInterviewTask = () => {
       submitLabel="➕ Add Task"
       initialValues={{
         question: "",
-        techStack: "React",
+        techStack: "",
         difficulty: "medium",
       }}
       onSubmit={handleAddTask}

@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from "../../components/Button";
 import TextField from "../../components/TextField";
 
-import {
-  TECH_STACK_OPTIONS,
-  DIFFICULTY_OPTIONS,
-} from "../../constants/interviewTaskOptions";
+import { auth } from "../../firebase/config";
+import { loadTechStacks } from "../../firebase/techStackStorage";
+
+import { DIFFICULTY_OPTIONS } from "../../constants/interviewTaskOptions";
 
 import type { Difficulty } from "../../constants/interviewTaskOptions";
 
@@ -38,6 +38,9 @@ const InterviewTaskForm = ({
 
   const [values, setValues] = useState(initialValues);
 
+  const [techStacks, setTechStacks] = useState<string[]>([]);
+  const [isLoadingTechStacks, setIsLoadingTechStacks] = useState(true);
+
   const questionLength = values.question.trim().length;
 
   const isChanged =
@@ -50,6 +53,36 @@ const InterviewTaskForm = ({
 
     onSubmit(values);
   };
+
+  useEffect(() => {
+    const loadUserTechStacks = async () => {
+      if (!auth.currentUser) {
+        setIsLoadingTechStacks(false);
+        return;
+      }
+
+      try {
+        const savedTechStacks = await loadTechStacks(auth.currentUser);
+
+        setTechStacks(savedTechStacks);
+
+        // For Add Task, select the first saved tech stack by default.
+        // For Edit Task, keep the existing task's tech stack.
+        if (!initialValues.techStack && savedTechStacks.length > 0) {
+          setValues((current) => ({
+            ...current,
+            techStack: savedTechStacks[0],
+          }));
+        }
+      } catch (error) {
+        console.error("Failed to load tech stacks", error);
+      } finally {
+        setIsLoadingTechStacks(false);
+      }
+    };
+
+    loadUserTechStacks();
+  }, [initialValues.techStack]);
 
   return (
     <div className="min-h-[80vh] flex items-start justify-center px-4 py-6 md:py-10 bg-gray-50">
@@ -95,13 +128,18 @@ const InterviewTaskForm = ({
                     techStack: e.target.value,
                   })
                 }
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white text-gray-800 transition outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                disabled={isLoadingTechStacks}
+                className="rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white text-gray-800 transition outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 disabled:bg-gray-100"
               >
-                {TECH_STACK_OPTIONS.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
+                {isLoadingTechStacks ? (
+                  <option>Loading...</option>
+                ) : (
+                  techStacks.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))
+                )}
               </select>
             </div>
 
