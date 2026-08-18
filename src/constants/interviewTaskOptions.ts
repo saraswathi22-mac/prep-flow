@@ -4,6 +4,11 @@ export const TECH_STACK_OPTIONS = [
   "TypeScript",
   "HTML/CSS",
   "Frontend System Design",
+  "Redux",
+  "Next.js",
+  "Node.js",
+  "SQL",
+  "Git",
 ] as const;
 
 export const DIFFICULTY_OPTIONS = [
@@ -21,5 +26,4 @@ export const DIFFICULTY_OPTIONS = [
   },
 ] as const;
 
-export type Difficulty =
-  (typeof DIFFICULTY_OPTIONS)[number]["value"];
+export type Difficulty = (typeof DIFFICULTY_OPTIONS)[number]["value"];
