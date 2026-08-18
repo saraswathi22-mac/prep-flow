@@ -220,7 +220,7 @@ const DailyProgress = ({ completed = 0, total = 0 }: DailyProgressProps) => {
             className="inline-flex items-center gap-2 font-semibold text-green-600"
           >
             <CelebrationRounded fontSize="small" />
-            Excellent! All tasks completed.
+            Excellent! All tasks are complete!
           </motion.span>
         ) : percent >= 60 ? (
           <span className="inline-flex items-center gap-2 font-semibold text-green-600">

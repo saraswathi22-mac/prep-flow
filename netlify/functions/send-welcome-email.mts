@@ -116,7 +116,7 @@ export default async (req: Request) => {
               line-height: 1.7;
               color: #475569;
             ">
-              One question at a time. One day at a time.
+              Keep learning. Keep growing. Keep going. 🚀
               You've got this! 💪
             </p>
 
