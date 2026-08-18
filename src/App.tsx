@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -32,6 +32,9 @@ import type { MouseEvent } from "react";
 import type { User } from "firebase/auth";
 import { AppDispatch, RootState } from "./store/store";
 
+import ManageTechStack from "./pages/ManageTechStack";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -47,6 +50,7 @@ function App() {
   };
 
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const tasks = useSelector((state: RootState) => state.interviewTasks);
 
@@ -229,6 +233,42 @@ shadow-sm
                   <MenuItem
                     onClick={() => {
                       handleMenuClose();
+                      navigate("/manage-tech-stack");
+                    }}
+                    sx={{
+                      px: {
+                        xs: 1.25,
+                        sm: 1.5,
+                        md: 2,
+                      },
+                      py: {
+                        xs: 0.5,
+                        sm: 0.75,
+                        md: 1,
+                      },
+                      fontSize: {
+                        xs: "0.8rem",
+                        sm: "0.85rem",
+                        md: "0.875rem",
+                      },
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: {
+                          xs: 28,
+                          sm: 30,
+                          md: 36,
+                        },
+                      }}
+                    >
+                      <SettingsOutlinedIcon fontSize="small" />
+                    </ListItemIcon>
+                    Manage Tech Stack
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleMenuClose();
                       handleLogout();
                     }}
                     sx={{
@@ -274,6 +314,10 @@ shadow-sm
                 <Route path="/" element={<InterviewTaskList />} />
                 <Route path="/add-task" element={<AddInterviewTask />} />
                 <Route path="/edit-task/:id" element={<EditInterviewTask />} />
+                <Route
+                  path="/manage-tech-stack"
+                  element={<ManageTechStack />}
+                />
               </Routes>
             </div>
           </main>
