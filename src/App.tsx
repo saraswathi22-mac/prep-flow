@@ -23,7 +23,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 
 import TechStackSetup from "./pages/TechStackSetup";
-import { loadTechStacks } from "./firebase/techStackStorage";
+import { hasCompletedTechStackSetup } from "./firebase/techStackStorage";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -43,7 +43,7 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(true);
-  const [hasTechStack, setHasTechStack] = useState(false);
+  const [hasCompletedSetup, setHasCompletedSetup] = useState(false);
   const [techStackLoading, setTechStackLoading] = useState(true);
   const isLoggingIn = useRef(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -76,14 +76,19 @@ function App() {
         );
 
         if (currentUser) {
-          const [savedTasks, savedTechStacks] = await Promise.all([
+          setLoading(true);
+          setTechStackLoading(true);
+        }
+
+        if (currentUser) {
+          const [savedTasks, setupCompleted] = await Promise.all([
             loadTasks(currentUser),
-            loadTechStacks(currentUser),
+            hasCompletedTechStackSetup(currentUser),
           ]);
 
           dispatch(setTasks(savedTasks));
 
-          setHasTechStack(savedTechStacks.length >= 5);
+          setHasCompletedSetup(setupCompleted);
           setTechStackLoading(false);
 
           if (isLoggingIn.current) {
@@ -101,7 +106,7 @@ function App() {
           }
         } else {
           dispatch(setTasks([]));
-          setHasTechStack(false);
+          setHasCompletedSetup(false);
           setTechStackLoading(false);
         }
 
@@ -165,8 +170,8 @@ function App() {
         </div>
       ) : !user ? (
         <Login onLoginStart={handleLoginStart} />
-      ) : !hasTechStack ? (
-        <TechStackSetup onComplete={() => setHasTechStack(true)} />
+      ) : !hasCompletedSetup ? (
+        <TechStackSetup onComplete={() => setHasCompletedSetup(true)} />
       ) : (
         <div className="min-h-screen bg-blue-50">
           {/* Navbar */}

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import TechStackSelector from "../components/TechStackSelector";
 
 import { auth } from "../firebase/config";
-import { saveTechStacks } from "../firebase/techStackStorage";
+import { completeTechStackSetup } from "../firebase/techStackStorage";
 
 interface TechStackSetupProps {
   onComplete: () => void;
@@ -15,7 +15,7 @@ const TechStackSetup = ({ onComplete }: TechStackSetupProps) => {
   const handleSave = async (techStacks: string[]) => {
     if (!auth.currentUser) return;
 
-    await saveTechStacks(auth.currentUser, techStacks);
+    await completeTechStackSetup(auth.currentUser, techStacks);
 
     onComplete();
     navigate("/");
