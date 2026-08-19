@@ -70,3 +70,24 @@ export const deleteTaskFromFirebase = async (
     console.error("Failed to delete task", error);
   }
 };
+
+export const deleteAllTasksFromFirebase = async (
+  user: User | null,
+): Promise<void> => {
+  if (!user) return;
+
+  try {
+    const collectionName = getCollectionName(user);
+    const querySnapshot = await getDocs(collection(db, collectionName));
+
+    const deletePromises = querySnapshot.docs.map((taskDoc) =>
+      deleteDoc(taskDoc.ref),
+    );
+
+    await Promise.all(deletePromises);
+  } catch (error) {
+    console.error("Failed to delete all tasks", error);
+
+    throw error;
+  }
+};

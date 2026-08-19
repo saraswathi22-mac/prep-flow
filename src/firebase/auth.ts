@@ -103,6 +103,19 @@ export const deleteUserAccount = async (user: User): Promise<void> => {
   await deleteUser(user);
 };
 
+export const reauthenticateUser = async (
+  user: User,
+  password: string,
+): Promise<void> => {
+  if (!user.email) {
+    throw new Error("User email is not available.");
+  }
+
+  const credential = EmailAuthProvider.credential(user.email, password);
+
+  await reauthenticateWithCredential(user, credential);
+};
+
 // Observe auth state
 export const observeAuthState = (callback: (user: User | null) => void) => {
   return onAuthStateChanged(auth, callback);

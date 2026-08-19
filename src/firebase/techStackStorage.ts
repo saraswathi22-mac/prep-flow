@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
 
 import { db } from "./config";
 import type { User } from "firebase/auth";
@@ -106,6 +106,22 @@ export const saveTechStacks = async (
     );
   } catch (error) {
     console.error("Failed to save tech stacks", error);
+
+    throw error;
+  }
+};
+
+export const deleteUserPreferences = async (
+  user: User | null,
+): Promise<void> => {
+  if (!user) return;
+
+  try {
+    const userPreferencesRef = getUserPreferencesRef(user);
+
+    await deleteDoc(userPreferencesRef);
+  } catch (error) {
+    console.error("Failed to delete user preferences", error);
 
     throw error;
   }
