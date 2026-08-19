@@ -4,6 +4,8 @@ import {
   signOut,
   onAuthStateChanged,
   updateProfile,
+  updatePassword,
+  deleteUser,
   type User,
 } from "firebase/auth";
 
@@ -59,12 +61,36 @@ export const login = async ({
     email,
     password,
   );
+
   return userCredential.user;
 };
 
 // Logout
 export const logout = async (): Promise<void> => {
   await signOut(auth);
+};
+
+// Update display name
+export const updateUserName = async (
+  user: User,
+  name: string,
+): Promise<void> => {
+  await updateProfile(user, {
+    displayName: name,
+  });
+};
+
+// Change password
+export const changeUserPassword = async (
+  user: User,
+  newPassword: string,
+): Promise<void> => {
+  await updatePassword(user, newPassword);
+};
+
+// Delete account
+export const deleteUserAccount = async (user: User): Promise<void> => {
+  await deleteUser(user);
 };
 
 // Observe auth state

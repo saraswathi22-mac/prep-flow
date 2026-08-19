@@ -37,7 +37,11 @@ import Button from "../../components/Button";
 import { RootState } from "../../store/store";
 import { InterviewTask, TaskFilter } from "../../types/task";
 
-const InterviewTaskList = () => {
+interface InterviewTaskListProps {
+  displayName: string;
+}
+
+const InterviewTaskList = ({ displayName }: InterviewTaskListProps) => {
   // Redux
   const dispatch = useDispatch();
   const allTasks = useSelector((state: RootState) => state.interviewTasks);
@@ -119,11 +123,10 @@ const InterviewTaskList = () => {
   const greeting =
     hour < 12 ? "Good Morning" : hour < 18 ? "Good Afternoon" : "Good Evening";
 
-  const userName = (user?.displayName || user?.email?.split("@")[0] || "User")
+  const firstName = displayName
     .replace(/[._-]/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
-
-  const firstName = userName.split(" ")[0];
+    .replace(/\b\w/g, (char) => char.toUpperCase())
+    .split(" ")[0];
 
   const handleDelete = (task: InterviewTask) => {
     try {

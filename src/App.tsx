@@ -35,8 +35,13 @@ import { AppDispatch, RootState } from "./store/store";
 import ManageTechStack from "./pages/ManageTechStack";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
+import AccountSettings from "./pages/AccountSettings";
+import PersonIcon from "@mui/icons-material/Person";
+import Divider from "@mui/material/Divider";
+
 function App() {
   const [user, setUser] = useState<User | null>(null);
+  const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(true);
   const [hasTechStack, setHasTechStack] = useState(false);
   const [techStackLoading, setTechStackLoading] = useState(true);
@@ -63,6 +68,11 @@ function App() {
     const unsubscribe = observeAuthState(
       async (currentUser: User | null): Promise<void> => {
         setUser(currentUser);
+        setDisplayName(
+          currentUser?.displayName ||
+            currentUser?.email?.split("@")[0] ||
+            "User",
+        );
 
         if (currentUser) {
           const [savedTasks, savedTechStacks] = await Promise.all([
@@ -123,7 +133,7 @@ function App() {
     isLoggingIn.current = true;
   };
 
-  const userName = (user?.displayName || user?.email?.split("@")[0] || "User")
+  const userName = displayName
     .replace(/[._-]/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
 
@@ -233,6 +243,42 @@ shadow-sm
                   <MenuItem
                     onClick={() => {
                       handleMenuClose();
+                      navigate("/account-settings");
+                    }}
+                    sx={{
+                      px: {
+                        xs: 1.25,
+                        sm: 1.5,
+                        md: 2,
+                      },
+                      py: {
+                        xs: 0.5,
+                        sm: 0.75,
+                        md: 1,
+                      },
+                      fontSize: {
+                        xs: "0.8rem",
+                        sm: "0.85rem",
+                        md: "0.875rem",
+                      },
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: {
+                          xs: 28,
+                          sm: 30,
+                          md: 36,
+                        },
+                      }}
+                    >
+                      <PersonIcon fontSize="small" sx={{ color: "#6366F1" }} />
+                    </ListItemIcon>
+                    Account Settings
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleMenuClose();
                       navigate("/manage-tech-stack");
                     }}
                     sx={{
@@ -266,6 +312,7 @@ shadow-sm
                     </ListItemIcon>
                     Manage Tech Stack
                   </MenuItem>
+                  <Divider />
                   <MenuItem
                     onClick={() => {
                       handleMenuClose();
@@ -311,12 +358,24 @@ shadow-sm
           <main className="mx-auto max-w-5xl px-4 py-8">
             <div className="bg-white rounded-xl shadow-md p-6 md:p-8">
               <Routes>
-                <Route path="/" element={<InterviewTaskList />} />
+                <Route
+                  path="/"
+                  element={<InterviewTaskList displayName={displayName} />}
+                />
                 <Route path="/add-task" element={<AddInterviewTask />} />
                 <Route path="/edit-task/:id" element={<EditInterviewTask />} />
                 <Route
                   path="/manage-tech-stack"
                   element={<ManageTechStack />}
+                />
+                <Route
+                  path="/account-settings"
+                  element={
+                    <AccountSettings
+                      user={user}
+                      onNameUpdated={setDisplayName}
+                    />
+                  }
                 />
               </Routes>
             </div>
