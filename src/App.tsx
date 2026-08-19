@@ -68,6 +68,7 @@ function App() {
     const unsubscribe = observeAuthState(
       async (currentUser: User | null): Promise<void> => {
         setUser(currentUser);
+
         setDisplayName(
           currentUser?.displayName ||
             currentUser?.email?.split("@")[0] ||
@@ -86,6 +87,7 @@ function App() {
           setTechStackLoading(false);
 
           if (isLoggingIn.current) {
+            navigate("/");
             toast.success(
               currentUser.displayName
                 ? `Welcome back, ${currentUser.displayName}!`
@@ -124,6 +126,7 @@ function App() {
   const handleLogout = async (): Promise<void> => {
     try {
       await signOut(auth);
+      navigate("/");
     } catch (error) {
       console.error("Logout error:", error);
     }

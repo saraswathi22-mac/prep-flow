@@ -6,6 +6,8 @@ import {
   updateProfile,
   updatePassword,
   deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
   type User,
 } from "firebase/auth";
 
@@ -83,8 +85,16 @@ export const updateUserName = async (
 // Change password
 export const changeUserPassword = async (
   user: User,
+  currentPassword: string,
   newPassword: string,
 ): Promise<void> => {
+  if (!user.email) {
+    throw new Error("User email is not available.");
+  }
+
+  const credential = EmailAuthProvider.credential(user.email, currentPassword);
+
+  await reauthenticateWithCredential(user, credential);
   await updatePassword(user, newPassword);
 };
 

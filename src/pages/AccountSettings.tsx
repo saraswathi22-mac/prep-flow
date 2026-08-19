@@ -74,6 +74,11 @@ function AccountSettings({ user, onNameUpdated }: AccountSettingsProps) {
       return;
     }
 
+    if (currentPassword === newPassword) {
+      toast.error("New password must be different from your current password.");
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
       toast.error("New passwords do not match.");
       return;
@@ -82,7 +87,7 @@ function AccountSettings({ user, onNameUpdated }: AccountSettingsProps) {
     try {
       setIsChangingPassword(true);
 
-      await changeUserPassword(user, newPassword);
+      await changeUserPassword(user, currentPassword, newPassword);
 
       setCurrentPassword("");
       setNewPassword("");
