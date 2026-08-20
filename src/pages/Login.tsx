@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login, signup } from "../firebase/auth";
+import { login, loginWithGoogle, signup } from "../firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { toast } from "sonner";
 
@@ -29,6 +29,9 @@ function Login({ onLoginStart }: LoginProps) {
 
       case "auth/weak-password":
         return "Password should be at least 6 characters";
+
+      case "auth/popup-closed-by-user":
+        return "Google sign-in was cancelled";
 
       case "auth/user-not-found":
         return "No account found with this email";
@@ -74,6 +77,36 @@ function Login({ onLoginStart }: LoginProps) {
       setLoading(false);
     }
   };
+
+  const handleGoogleLogin = async (): Promise<void> => {
+  if (loading) return;
+
+  setLoading(true);
+
+  try {
+    onLoginStart();
+    await loginWithGoogle();
+  } catch (err: unknown) {
+    console.error("Google sign-in error:", err);
+
+    if (err instanceof FirebaseError) {
+      console.error("Google error code:", err.code);
+      console.error("Google error message:", err.message);
+
+      toast.error(`${err.code}: ${err.message}`, {
+        duration: 6000,
+      });
+    } else {
+      console.error("Unknown Google sign-in error:", err);
+
+      toast.error("Something went wrong. Please try again.", {
+        duration: 4000,
+      });
+    }
+  } finally {
+    setLoading(false);
+  }
+};
 
   const toggleMode = (): void => {
     setName("");
@@ -202,6 +235,24 @@ function Login({ onLoginStart }: LoginProps) {
             )}
           </button>
         </form>
+
+        <div className="mt-6">
+          <div className="relative mb-5 flex items-center">
+            <div className="flex-1 border-t border-slate-200" />
+            <span className="px-3 text-xs text-slate-400">OR</span>
+            <div className="flex-1 border-t border-slate-200" />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => void handleGoogleLogin()}
+            disabled={loading}
+            className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white py-3 font-medium text-slate-700 transition-all duration-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            <span className="text-lg font-bold">G</span>
+            Continue with Google
+          </button>
+        </div>
 
         {/* Features */}
         <div className="mt-6 flex flex-wrap justify-center gap-4 text-xs text-slate-500">

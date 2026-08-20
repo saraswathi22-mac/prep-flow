@@ -2,6 +2,10 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  signInWithPopup,
+  fetchSignInMethodsForEmail,
+  linkWithCredential,
+  GoogleAuthProvider,
   onAuthStateChanged,
   updateProfile,
   updatePassword,
@@ -63,6 +67,15 @@ export const login = async ({
     email,
     password,
   );
+
+  return userCredential.user;
+};
+
+// Sign in with Google
+export const loginWithGoogle = async (): Promise<User> => {
+  const provider = new GoogleAuthProvider();
+
+  const userCredential = await signInWithPopup(auth, provider);
 
   return userCredential.user;
 };
