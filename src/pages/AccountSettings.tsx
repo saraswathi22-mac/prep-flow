@@ -5,6 +5,7 @@ import {
   changeUserPassword,
   deleteUserAccount,
   reauthenticateUser,
+  connectGoogleAccount,
 } from "../firebase/auth";
 import { toast } from "sonner";
 
@@ -15,6 +16,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import GoogleIcon from "@mui/icons-material/Google";
 
 import type { User } from "firebase/auth";
 
@@ -39,6 +41,8 @@ function AccountSettings({ user, onNameUpdated }: AccountSettingsProps) {
 
   const [deletePassword, setDeletePassword] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [isConnectingGoogle, setIsConnectingGoogle] = useState(false);
 
   const handleSaveName = async () => {
     const trimmedName = name.trim();
@@ -138,6 +142,42 @@ function AccountSettings({ user, onNameUpdated }: AccountSettingsProps) {
       );
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleConnectGoogle = async () => {
+    if (!user) return;
+
+    try {
+      setIsConnectingGoogle(true);
+
+      await connectGoogleAccount();
+
+      toast.success("Google connected successfully.", {
+        description: "You can now sign in with Google or your password.",
+      });
+    } catch (error) {
+      console.error("Connect Google error:", error);
+
+      if (error instanceof Error && "code" in error) {
+        const code = (error as { code: string }).code;
+
+        if (code === "auth/popup-closed-by-user") {
+          toast.error("Google connection was cancelled.");
+        } else if (code === "auth/credential-already-in-use") {
+          toast.error(
+            "This Google account is already connected to another account.",
+          );
+        } else if (code === "auth/provider-already-linked") {
+          toast.info("Google is already connected to your account.");
+        } else {
+          toast.error("Unable to connect Google. Please try again.");
+        }
+      } else {
+        toast.error("Unable to connect Google. Please try again.");
+      }
+    } finally {
+      setIsConnectingGoogle(false);
     }
   };
 
@@ -242,6 +282,60 @@ function AccountSettings({ user, onNameUpdated }: AccountSettingsProps) {
             <p className="mt-2 text-xs text-slate-400">
               Your email address cannot be changed here.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Connected Accounts */}
+      <section className="mb-6 rounded-xl border border-slate-200 bg-white p-6">
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+            <GoogleIcon />
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-slate-800">
+              Connected Accounts
+            </h3>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Manage the ways you can sign in to PrepFlow.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 rounded-lg border border-slate-200 px-4 py-4">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <GoogleIcon className="text-slate-600" />
+
+              <div>
+                <p className="text-sm font-medium text-slate-700">Google</p>
+
+                <p className="text-xs text-slate-500">
+                  Sign in with your Google account
+                </p>
+              </div>
+            </div>
+
+            {user?.providerData.some(
+              (provider) => provider.providerId === "google.com",
+            ) ? (
+              <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-[#5A9C43]">
+                Connected ✓
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  void handleConnectGoogle();
+                }}
+                disabled={isConnectingGoogle}
+                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isConnectingGoogle ? "Connecting..." : "Connect"}
+              </button>
+            )}
           </div>
         </div>
       </section>

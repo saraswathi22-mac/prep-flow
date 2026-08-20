@@ -79,34 +79,29 @@ function Login({ onLoginStart }: LoginProps) {
   };
 
   const handleGoogleLogin = async (): Promise<void> => {
-  if (loading) return;
+    if (loading) return;
 
-  setLoading(true);
+    setLoading(true);
 
-  try {
-    onLoginStart();
-    await loginWithGoogle();
-  } catch (err: unknown) {
-    console.error("Google sign-in error:", err);
+    try {
+      onLoginStart();
+      await loginWithGoogle();
+    } catch (err: unknown) {
+      console.error("Google sign-in error:", err);
 
-    if (err instanceof FirebaseError) {
-      console.error("Google error code:", err.code);
-      console.error("Google error message:", err.message);
-
-      toast.error(`${err.code}: ${err.message}`, {
-        duration: 6000,
-      });
-    } else {
-      console.error("Unknown Google sign-in error:", err);
-
-      toast.error("Something went wrong. Please try again.", {
-        duration: 4000,
-      });
+      if (err instanceof FirebaseError) {
+        toast.error(getErrorMessage(err), {
+          duration: 4000,
+        });
+      } else {
+        toast.error("Something went wrong. Please try again.", {
+          duration: 4000,
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const toggleMode = (): void => {
     setName("");

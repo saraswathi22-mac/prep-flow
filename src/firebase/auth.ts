@@ -3,8 +3,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   signInWithPopup,
-  fetchSignInMethodsForEmail,
-  linkWithCredential,
+  linkWithPopup,
   GoogleAuthProvider,
   onAuthStateChanged,
   updateProfile,
@@ -76,6 +75,21 @@ export const loginWithGoogle = async (): Promise<User> => {
   const provider = new GoogleAuthProvider();
 
   const userCredential = await signInWithPopup(auth, provider);
+
+  return userCredential.user;
+};
+
+// Link Google to the currently signed-in user
+export const connectGoogleAccount = async (): Promise<User> => {
+  const user = auth.currentUser;
+
+  if (!user) {
+    throw new Error("You must be signed in to connect Google.");
+  }
+
+  const provider = new GoogleAuthProvider();
+
+  const userCredential = await linkWithPopup(user, provider);
 
   return userCredential.user;
 };
