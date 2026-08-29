@@ -18,7 +18,9 @@ import {
   type AuthCredential,
 } from "firebase/auth";
 
-import { auth } from "./config";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+
+import { auth, db } from "./config";
 
 interface AuthCredentials {
   email: string;
@@ -42,11 +44,10 @@ export const signup = async ({
     displayName: name,
   });
 
-  // DEBUG: confirm exactly which email the password account was created with.
-  console.log(
-    "[signup] created account with email:",
-    userCredential.user.email,
-  );
+  await setDoc(doc(db, "users", userCredential.user.uid), {
+    email: email.trim().toLowerCase(),
+    googleConnected: false,
+  });
 
   try {
     await fetch("/api/send-welcome-email", {
@@ -66,6 +67,26 @@ export const signup = async ({
   return userCredential.user;
 };
 
+const GOOGLE_LINKED_EMAILS_COLLECTION = "googleLinkedEmails";
+
+const markGoogleConnectedForUser = async (user: User): Promise<void> => {
+  // setDoc + merge instead of updateDoc: works even if this user's
+  // users/{uid} doc doesn't exist yet (e.g. older test accounts).
+  await setDoc(
+    doc(db, "users", user.uid),
+    { googleConnected: true },
+    { merge: true },
+  );
+
+  if (user.email) {
+    await setDoc(
+      doc(db, GOOGLE_LINKED_EMAILS_COLLECTION, user.email.trim().toLowerCase()),
+      { linked: true },
+      { merge: true },
+    );
+  }
+};
+
 // Login
 export const login = async ({
   email,
@@ -81,12 +102,6 @@ export const login = async ({
     return userCredential.user;
   } catch (error) {
     const authError = error as AuthError;
-
-    console.error(
-      "[login] Firebase error code:",
-      authError.code,
-      authError.message,
-    );
 
     throw authError;
   }
@@ -116,20 +131,9 @@ export const loginWithGoogle = async (): Promise<User> => {
   try {
     const userCredential = await signInWithPopup(auth, provider);
 
-    // DEBUG: confirm exactly which email Google actually returned.
-    // Compare this against the email you used for your password signup —
-    // if they don't match exactly, that's why no collision was detected.
-    console.log("[loginWithGoogle] signed in as:", userCredential.user.email);
-
     return userCredential.user;
   } catch (error) {
     const authError = error as AuthError;
-
-    console.error(
-      "[loginWithGoogle] Firebase error code:",
-      authError.code,
-      authError.message,
-    );
 
     if (authError.code === "auth/account-exists-with-different-credential") {
       const email = authError.customData?.email as string;
@@ -157,7 +161,25 @@ export const connectGoogleAfterSignup = async (): Promise<User> => {
 
   const userCredential = await linkWithPopup(user, provider);
 
+  await markGoogleConnectedForUser(userCredential.user);
+
   return userCredential.user;
+};
+
+export const isGoogleConnectedForEmail = async (
+  email: string,
+): Promise<boolean> => {
+  const normalizedEmail = email.trim().toLowerCase();
+
+  if (!normalizedEmail) {
+    return false;
+  }
+
+  const snap = await getDoc(
+    doc(db, GOOGLE_LINKED_EMAILS_COLLECTION, normalizedEmail),
+  );
+
+  return snap.exists() && snap.data()?.linked === true;
 };
 
 /**
@@ -178,6 +200,8 @@ export const resolveGoogleAccountLink = async (
     password,
   );
   await linkWithCredential(userCredential.user, pendingCredential);
+  await markGoogleConnectedForUser(userCredential.user);
+
   return userCredential.user;
 };
 
@@ -221,6 +245,8 @@ export const connectGoogleAccount = async (): Promise<User> => {
   const provider = new GoogleAuthProvider();
 
   const userCredential = await linkWithPopup(user, provider);
+
+  await markGoogleConnectedForUser(userCredential.user);
 
   return userCredential.user;
 };

@@ -4,14 +4,12 @@ import {
   loginWithGoogle,
   resolveGoogleAccountLink,
   GooglePasswordLinkRequired,
-  addPasswordToAccount,
   signup,
+  isGoogleConnectedForEmail,
 } from "../firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { toast } from "sonner";
 import type { AuthCredential } from "firebase/auth";
-import { fetchSignInMethodsForEmail } from "firebase/auth";
-import { auth } from "../firebase/config";
 
 interface LoginProps {
   onLoginStart: () => void;
@@ -25,6 +23,7 @@ function Login({ onLoginStart, onSignupStart }: LoginProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [googleConnected, setGoogleConnected] = useState(false);
 
   // When Google sign-in collides with an existing
   // email/password account, store the pending Google
@@ -71,6 +70,22 @@ function Login({ onLoginStart, onSignupStart }: LoginProps) {
     password.trim() !== "" &&
     (isLogin || name.trim() !== "");
 
+  const checkGoogleConnection = async (): Promise<void> => {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!normalizedEmail) {
+      setGoogleConnected(false);
+      return;
+    }
+
+    try {
+      const connected = await isGoogleConnectedForEmail(normalizedEmail);
+
+      setGoogleConnected(connected);
+    } catch (error) {
+      setGoogleConnected(false);
+    }
+  };
   // Email/password login or signup.
   //
   // Note: this no longer decides whether to show a "connect Google"
@@ -127,19 +142,7 @@ function Login({ onLoginStart, onSignupStart }: LoginProps) {
     setLoading(true);
 
     try {
-      const user = await loginWithGoogle();
-
-      // TEMP DEBUG — confirms whether the password method
-      // survived the Google sign-in for this email.
-      if (user.email) {
-        const methods = await fetchSignInMethodsForEmail(auth, user.email);
-        console.log(
-          "[handleGoogleLogin] sign-in methods for",
-          user.email,
-          ":",
-          methods,
-        );
-      }
+      await loginWithGoogle();
 
       onLoginStart();
     } catch (err: unknown) {
@@ -233,6 +236,7 @@ function Login({ onLoginStart, onSignupStart }: LoginProps) {
     setEmail("");
     setPassword("");
     setShowPassword(false);
+    setGoogleConnected(false);
     setIsLogin((prev) => !prev);
   };
 
@@ -354,7 +358,11 @@ function Login({ onLoginStart, onSignupStart }: LoginProps) {
             type="email"
             placeholder="Email address"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setGoogleConnected(false);
+            }}
+            onBlur={() => void checkGoogleConnection()}
             className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-700 outline-none transition-all focus:border-slate-400 focus:ring-4 focus:ring-slate-100"
           />
 
@@ -412,6 +420,34 @@ function Login({ onLoginStart, onSignupStart }: LoginProps) {
             )}
           </button>
         </form>
+
+        {/* Google Sign In — only shown once this browser has confirmed
+            Google is actually connected to the account. Prevents firing
+            signInWithPopup against an email that already has an
+            unverified password account (the root cause of the original
+            "not registered" bug: it silently created a second, separate
+            user record instead of triggering the collision/link flow). */}
+        {googleConnected && (
+          <div className="mt-6">
+            <div className="relative mb-5 flex items-center">
+              <div className="flex-1 border-t border-slate-200" />
+
+              <span className="px-3 text-xs text-slate-400">OR</span>
+
+              <div className="flex-1 border-t border-slate-200" />
+            </div>
+
+            <button
+              type="button"
+              onClick={() => void handleGoogleLogin()}
+              disabled={loading}
+              className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white py-3 font-medium text-slate-700 transition-all duration-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              <span className="text-lg font-bold">G</span>
+              Continue with Google
+            </button>
+          </div>
+        )}
 
         {/* Features */}
         <div className="mt-6 flex flex-wrap justify-center gap-4 text-xs text-slate-500">
