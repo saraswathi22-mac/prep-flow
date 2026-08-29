@@ -38,6 +38,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import AccountSettings from "./pages/AccountSettings";
 import PersonIcon from "@mui/icons-material/Person";
 import Divider from "@mui/material/Divider";
+import ConnectGooglePrompt from "./pages/ConnectGooglePrompt";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -45,7 +46,16 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [hasCompletedSetup, setHasCompletedSetup] = useState(false);
   const [techStackLoading, setTechStackLoading] = useState(true);
+
+  // Whether to show the post-auth "Connect your Google account" step.
+  // Lives at the App level (not inside Login) because Firebase signs the
+  // user in immediately on signup/login, which unmounts <Login /> right
+  // away — anything meant to appear right after auth has to be its own
+  // step in this render chain, not state inside Login.
+  const [showGoogleConnectPrompt, setShowGoogleConnectPrompt] = useState(true);
+
   const isLoggingIn = useRef(false);
+  const isCompletingSignup = useRef(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const open = Boolean(anchorEl);
@@ -91,23 +101,45 @@ function App() {
           setHasCompletedSetup(setupCompleted);
           setTechStackLoading(false);
 
-          if (isLoggingIn.current) {
-            navigate("/");
-            toast.success(
-              currentUser.displayName
-                ? `Welcome back, ${currentUser.displayName}!`
-                : "Welcome back!",
-              {
-                description: "You're successfully signed in.",
-              },
-            );
+          setShowGoogleConnectPrompt(true);
+
+          const cameFromFreshAuth =
+            isLoggingIn.current || isCompletingSignup.current;
+
+          const alreadyLinkedToGoogle = currentUser.providerData.some(
+            (p) => p.providerId === "google.com",
+          );
+
+          if (
+            cameFromFreshAuth &&
+            !alreadyLinkedToGoogle
+          ) {
+            // Fresh signup or login, and this account isn't connected to
+            // Google yet — show the connect step before letting them in.
+            setShowGoogleConnectPrompt(true);
+          } else {
+            setShowGoogleConnectPrompt(false);
+
+            if (isLoggingIn.current) {
+              navigate("/");
+              toast.success(
+                currentUser.displayName
+                  ? `Welcome back, ${currentUser.displayName}!`
+                  : "Welcome back!",
+                {
+                  description: "You're successfully signed in.",
+                },
+              );
+            }
 
             isLoggingIn.current = false;
+            isCompletingSignup.current = false;
           }
         } else {
           dispatch(setTasks([]));
           setHasCompletedSetup(false);
           setTechStackLoading(false);
+          setShowGoogleConnectPrompt(false);
         }
 
         setLoading(false);
@@ -141,6 +173,32 @@ function App() {
     isLoggingIn.current = true;
   };
 
+  const handleSignupStart = () => {
+    isCompletingSignup.current = true;
+  };
+
+  // Called when the ConnectGooglePrompt step resolves — either Google
+  // got connected, or the user chose to skip. Either way, move on into
+  // the app the same way the pre-refactor "isLoggingIn" flow did.
+  const handleGoogleConnectPromptDone = (): void => {
+    const wasLogin = isLoggingIn.current;
+
+    setShowGoogleConnectPrompt(false);
+    navigate("/");
+
+    if (wasLogin) {
+      toast.success(
+        displayName ? `Welcome back, ${displayName}!` : "Welcome back!",
+        {
+          description: "You're successfully signed in.",
+        },
+      );
+    }
+
+    isLoggingIn.current = false;
+    isCompletingSignup.current = false;
+  };
+
   const userName = displayName
     .replace(/[._-]/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
@@ -169,7 +227,12 @@ function App() {
           </div>
         </div>
       ) : !user ? (
-        <Login onLoginStart={handleLoginStart} />
+        <Login
+          onLoginStart={handleLoginStart}
+          onSignupStart={handleSignupStart}
+        />
+      ) : showGoogleConnectPrompt ? (
+        <ConnectGooglePrompt onDone={handleGoogleConnectPromptDone} />
       ) : !hasCompletedSetup ? (
         <TechStackSetup onComplete={() => setHasCompletedSetup(true)} />
       ) : (
