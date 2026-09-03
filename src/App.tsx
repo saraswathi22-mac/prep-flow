@@ -40,6 +40,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import Divider from "@mui/material/Divider";
 import ConnectGooglePrompt from "./pages/ConnectGooglePrompt";
 
+import CreateAccount from "./pages/CreateAccount";
+
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [displayName, setDisplayName] = useState("");
@@ -201,9 +203,13 @@ function App() {
     isCompletingSignup.current = false;
   };
 
-  const userName = displayName
-    .replace(/[._-]/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+  const isGuest = user?.isAnonymous ?? false;
+
+  const userName = isGuest
+    ? "Guest"
+    : displayName
+        .replace(/[._-]/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase());
 
   return (
     <>
@@ -316,7 +322,9 @@ shadow-sm
                   <MenuItem
                     onClick={() => {
                       handleMenuClose();
-                      navigate("/account-settings");
+                      navigate(
+                        isGuest ? "/create-account" : "/account-settings",
+                      );
                     }}
                     sx={{
                       px: {
@@ -347,7 +355,7 @@ shadow-sm
                     >
                       <PersonIcon fontSize="small" sx={{ color: "#6366F1" }} />
                     </ListItemIcon>
-                    Account Settings
+                    {isGuest ? "Create an Account" : "Account Settings"}
                   </MenuItem>
 
                   <MenuItem
@@ -423,7 +431,7 @@ shadow-sm
                     >
                       <LogoutOutlinedIcon color="error" fontSize="small" />
                     </ListItemIcon>
-                    Logout
+                    {isGuest ? "Leave Guest Mode" : "Logout"}
                   </MenuItem>
                 </Menu>
               </div>
@@ -452,6 +460,10 @@ shadow-sm
                       onNameUpdated={setDisplayName}
                     />
                   }
+                />
+                <Route
+                  path="/create-account"
+                  element={<CreateAccount onNameUpdated={setDisplayName} />}
                 />
               </Routes>
             </div>

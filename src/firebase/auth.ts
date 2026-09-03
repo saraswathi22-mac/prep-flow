@@ -115,6 +115,55 @@ export const loginAsGuest = async (): Promise<User> => {
   return userCredential.user;
 };
 
+// Upgrade guest account to email/password account
+export const createAccountFromGuest = async ({
+  name,
+  email,
+  password,
+}: AuthCredentials): Promise<User> => {
+  const user = auth.currentUser;
+
+  if (!user || !user.isAnonymous) {
+    throw new Error("No guest account is available to upgrade.");
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const credential = EmailAuthProvider.credential(normalizedEmail, password);
+
+  const userCredential = await linkWithCredential(user, credential);
+
+  await updateProfile(userCredential.user, {
+    displayName: name,
+  });
+
+  await setDoc(
+    doc(db, "users", userCredential.user.uid),
+    {
+      email: normalizedEmail,
+      googleConnected: false,
+    },
+    { merge: true },
+  );
+
+  try {
+    await fetch("/api/send-welcome-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: normalizedEmail,
+        name,
+      }),
+    });
+  } catch (error) {
+    console.error("Failed to send welcome email:", error);
+  }
+
+  return userCredential.user;
+};
+
 /**
  * Thrown when Google sign-in collides with an existing email/password
  * account. The UI should catch this, show a "confirm your password"
