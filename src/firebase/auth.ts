@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInAnonymously,
   signOut,
   signInWithPopup,
   linkWithPopup,
@@ -105,6 +106,13 @@ export const login = async ({
 
     throw authError;
   }
+};
+
+// Guest login
+export const loginAsGuest = async (): Promise<User> => {
+  const userCredential = await signInAnonymously(auth);
+
+  return userCredential.user;
 };
 
 /**

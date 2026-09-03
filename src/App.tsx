@@ -101,19 +101,16 @@ function App() {
           setHasCompletedSetup(setupCompleted);
           setTechStackLoading(false);
 
-          setShowGoogleConnectPrompt(true);
-
           const cameFromFreshAuth =
             isLoggingIn.current || isCompletingSignup.current;
+
+          const isGuest = currentUser.isAnonymous;
 
           const alreadyLinkedToGoogle = currentUser.providerData.some(
             (p) => p.providerId === "google.com",
           );
 
-          if (
-            cameFromFreshAuth &&
-            !alreadyLinkedToGoogle
-          ) {
+          if (cameFromFreshAuth && !alreadyLinkedToGoogle && !isGuest) {
             // Fresh signup or login, and this account isn't connected to
             // Google yet — show the connect step before letting them in.
             setShowGoogleConnectPrompt(true);
@@ -122,12 +119,17 @@ function App() {
 
             if (isLoggingIn.current) {
               navigate("/");
+
               toast.success(
-                currentUser.displayName
-                  ? `Welcome back, ${currentUser.displayName}!`
-                  : "Welcome back!",
+                isGuest
+                  ? "Welcome to PrepFlow!"
+                  : currentUser.displayName
+                    ? `Welcome back, ${currentUser.displayName}!`
+                    : "Welcome back!",
                 {
-                  description: "You're successfully signed in.",
+                  description: isGuest
+                    ? "You're continuing as a guest."
+                    : "You're successfully signed in.",
                 },
               );
             }
@@ -347,6 +349,7 @@ shadow-sm
                     </ListItemIcon>
                     Account Settings
                   </MenuItem>
+
                   <MenuItem
                     onClick={() => {
                       handleMenuClose();
@@ -383,7 +386,9 @@ shadow-sm
                     </ListItemIcon>
                     Manage Tech Stack
                   </MenuItem>
+
                   <Divider />
+
                   <MenuItem
                     onClick={() => {
                       handleMenuClose();
@@ -397,7 +402,7 @@ shadow-sm
                       },
                       py: {
                         xs: 0.5,
-                        sm: 0.75,
+                        sm: "0.75rem",
                         md: 1,
                       },
                       fontSize: {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   login,
+  loginAsGuest,
   loginWithGoogle,
   resolveGoogleAccountLink,
   GooglePasswordLinkRequired,
@@ -231,6 +232,24 @@ function Login({ onLoginStart, onSignupStart }: LoginProps) {
     }
   };
 
+  const handleGuestLogin = async (): Promise<void> => {
+    if (loading) return;
+
+    setLoading(true);
+
+    try {
+      await loginAsGuest();
+
+      onLoginStart();
+    } catch (err) {
+      toast.error("Unable to continue as guest. Please try again.", {
+        duration: 4000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const toggleMode = (): void => {
     setName("");
     setEmail("");
@@ -420,6 +439,27 @@ function Login({ onLoginStart, onSignupStart }: LoginProps) {
             )}
           </button>
         </form>
+
+        {isLogin && (
+          <div className="mt-6">
+            <div className="relative mb-5 flex items-center">
+              <div className="flex-1 border-t border-slate-200" />
+
+              <span className="px-3 text-xs text-slate-400">OR</span>
+
+              <div className="flex-1 border-t border-slate-200" />
+            </div>
+
+            <button
+              type="button"
+              onClick={() => void handleGuestLogin()}
+              disabled={loading}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white py-3 font-medium text-slate-700 transition-all duration-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              Continue as Guest
+            </button>
+          </div>
+        )}
 
         {/* Google Sign In — only shown once this browser has confirmed
             Google is actually connected to the account. Prevents firing
