@@ -40,13 +40,9 @@ Preparing for frontend interviews often meant juggling notes, spreadsheets, and 
 
   <br/><br/>
 
-  🎥 <a
-  href="https://www.youtube.com/watch?v=DJk5ZDKaVuk"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Watch the PrepFlow Feature Demo
-</a>
+  🎥 <a href="https://www.youtube.com/watch?v=DJk5ZDKaVuk" target="_blank" rel="noopener noreferrer">Watch the PrepFlow Feature Demo</a>
+
+  <br/>
 
   <em>A preview of selected PrepFlow features and user flows.</em>
 </p>
