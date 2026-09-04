@@ -44,8 +44,6 @@ Preparing for frontend interviews often meant juggling notes, spreadsheets, and 
     Watch the PrepFlow Feature Demo
   </a>
 
-  <br/>
-
   <em>A preview of selected PrepFlow features and user flows.</em>
 </p>
 
