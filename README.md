@@ -28,16 +28,24 @@ Preparing for frontend interviews often meant juggling notes, spreadsheets, and 
 ## 📸 Preview
 
 <p align="center">
-  <img src="public/screenshots/interview-tasks.png" width="800" alt="PrepFlow task board with Todo, In Progress, and Done columns"/>
-  <br/>
-  <em>Task board — track interview prep tasks across Todo, In Progress, and Done</em>
-</p>
+  <img
+    src="public/screenshots/interview-tasks.png"
+    width="800"
+    alt="PrepFlow task board with Todo, In Progress, and Done columns"
+  />
 
-<p align="center">
+  <br/>
+
+  <em>Task board — track interview prep tasks across Todo, In Progress, and Done</em>
+
+  <br/><br/>
+
   🎥 <a href="https://www.youtube.com/watch?v=DJk5ZDKaVuk">
     Watch the PrepFlow Feature Demo
   </a>
+
   <br/>
+
   <em>A preview of selected PrepFlow features and user flows.</em>
 </p>
 
