@@ -34,9 +34,11 @@ Preparing for frontend interviews often meant juggling notes, spreadsheets, and 
 </p>
 
 <p align="center">
-  <img src="public/screenshots/signin-login.png" width="450" alt="PrepFlow sign-in screen"/>
+  🎥 <a href="https://www.youtube.com/watch?v=DJk5ZDKaVuk">
+    Watch the PrepFlow Feature Demo
+  </a>
   <br/>
-  <em>Sign in with email to sync your progress across devices</em>
+  <em>A preview of selected PrepFlow features and user flows.</em>
 </p>
 
 ---
