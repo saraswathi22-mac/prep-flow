@@ -10,9 +10,13 @@ const BRAND_GREEN_HOVER = "#4C8A38" as const;
 
 interface CreateAccountProps {
   onNameUpdated: (name: string) => void;
+  onAccountCreated: () => void;
 }
 
-function CreateAccount({ onNameUpdated }: CreateAccountProps) {
+function CreateAccount({
+  onNameUpdated,
+  onAccountCreated,
+}: CreateAccountProps) {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -57,12 +61,11 @@ function CreateAccount({ onNameUpdated }: CreateAccountProps) {
       });
 
       onNameUpdated(name.trim());
+      onAccountCreated();
 
       toast.success(`Welcome, ${user.displayName || name.trim()}!`, {
         description: "Your guest account has been upgraded successfully.",
       });
-
-      navigate("/");
     } catch (err: unknown) {
       if (err instanceof FirebaseError) {
         toast.error(getErrorMessage(err), {

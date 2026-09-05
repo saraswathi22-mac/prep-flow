@@ -203,6 +203,10 @@ function App() {
     isCompletingSignup.current = false;
   };
 
+  const handleAccountCreated = (): void => {
+    setShowGoogleConnectPrompt(true);
+  };
+
   const isGuest = user?.isAnonymous ?? false;
 
   const userName = isGuest
@@ -463,7 +467,12 @@ shadow-sm
                 />
                 <Route
                   path="/create-account"
-                  element={<CreateAccount onNameUpdated={setDisplayName} />}
+                  element={
+                    <CreateAccount
+                      onNameUpdated={setDisplayName}
+                      onAccountCreated={handleAccountCreated}
+                    />
+                  }
                 />
               </Routes>
             </div>
