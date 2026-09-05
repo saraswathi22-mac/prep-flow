@@ -146,6 +146,14 @@ export const createAccountFromGuest = async ({
     { merge: true },
   );
 
+  await setDoc(
+    doc(db, GOOGLE_LINKED_EMAILS_COLLECTION, normalizedEmail),
+    {
+      linked: false,
+    },
+    { merge: true },
+  );
+
   try {
     await fetch("/api/send-welcome-email", {
       method: "POST",
