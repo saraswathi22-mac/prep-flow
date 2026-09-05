@@ -19,7 +19,7 @@ import {
   type AuthCredential,
 } from "firebase/auth";
 
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
 
 import { auth, db } from "./config";
 
@@ -245,6 +245,16 @@ export const isGoogleConnectedForEmail = async (
   );
 
   return snap.exists() && snap.data()?.linked === true;
+};
+
+export const deleteGoogleLinkedEmail = async (email: string): Promise<void> => {
+  const normalizedEmail = email.trim().toLowerCase();
+
+  if (!normalizedEmail) {
+    return;
+  }
+
+  await deleteDoc(doc(db, GOOGLE_LINKED_EMAILS_COLLECTION, normalizedEmail));
 };
 
 /**

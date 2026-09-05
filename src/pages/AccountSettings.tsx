@@ -4,6 +4,7 @@ import {
   updateUserName,
   changeUserPassword,
   deleteUserAccount,
+  deleteGoogleLinkedEmail,
   reauthenticateUser,
   connectGoogleAccount,
 } from "../firebase/auth";
@@ -128,6 +129,9 @@ function AccountSettings({ user, onNameUpdated }: AccountSettingsProps) {
 
       await deleteAllTasksFromFirebase(user);
       await deleteUserPreferences(user);
+      if (user.email) {
+        await deleteGoogleLinkedEmail(user.email);
+      }
       await deleteUserAccount(user);
 
       setShowDeleteModal(false);
